@@ -33,15 +33,46 @@ if 'page' not in st.session_state:
 # === Home Page ===
 def home_page():
     st.markdown("""
+        <style>
+        .home-overlay {
+            position: relative;
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .connect-button-container {
+            position: absolute;
+            top: 65%;
+            left: 55%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .connect-button-container button {
+            font-size: 22px !important;
+            padding: 10px 40px !important;
+            border-radius: 10px !important;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    # Title (can float above or stay at top)
+    st.markdown("""
         <div class="overlay">
             <h1>Computer Vision-Based Drone Pineapple Maturity Detection:<br>Fuzzy Logic and YOLO</h1>
         </div>
     """, unsafe_allow_html=True)
 
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        if st.button("Connect", use_container_width=True):
-            st.session_state.page = "about"
+    # Button positioned lower and right
+    st.markdown('<div class="home-overlay">', unsafe_allow_html=True)
+    st.markdown('<div class="connect-button-container">', unsafe_allow_html=True)
+
+    if st.button("Connect", use_container_width=False):
+        st.session_state.page = "about"
+
+    st.markdown('</div></div>', unsafe_allow_html=True)
 
 # === About Page ===
 def about_page():
