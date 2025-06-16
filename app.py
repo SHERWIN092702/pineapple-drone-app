@@ -1,8 +1,16 @@
 import streamlit as st
 from PIL import Image
+import base64
+
+# === Function to convert image to base64 ===
+def get_base64_image(file_path):
+    with open(file_path, "rb") as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
 
 # Load background image
 bg_image = Image.open("bg1.jpg")
+encoded_bg = get_base64_image("bg1.jpg")
 
 # Page state management
 if 'page' not in st.session_state:
@@ -10,11 +18,12 @@ if 'page' not in st.session_state:
 
 # === Home Page ===
 def home_page():
+    # Inject background image as CSS
     st.markdown(
         f"""
         <style>
         .stApp {{
-            background-image: url("bg1.jpg");
+            background-image: url("data:image/jpg;base64,{encoded_bg}");
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -25,13 +34,7 @@ def home_page():
         unsafe_allow_html=True
     )
 
-    # Temporary placeholder to see the effect
-    st.write("")
-    st.write("")
-    st.write("### Background loaded!")
-
-
-
+    st.markdown("""<br><br><br><h2 style='text-align:center; color:white;'>Background loaded!</h2>""", unsafe_allow_html=True)
 
 # === About Page ===
 def about_page():
