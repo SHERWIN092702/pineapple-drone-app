@@ -10,17 +10,51 @@ if 'page' not in st.session_state:
 
 # === Home Page ===
 def home_page():
-    st.image(bg_image, use_container_width=True)
+    # Background with dark overlay for contrast
     st.markdown("""
-        <h1 style='text-align: center; color: white; background-color: black; padding: 20px;'>
-        Computer Vision-Based Drone Pineapple Maturity Detection:<br>Fuzzy Logic and YOLO
-        </h1>
+        <style>
+            .background {
+                position: fixed;
+                top: 0; left: 0;
+                width: 100vw;
+                height: 100vh;
+                background-image: url('bg1.jpg');
+                background-size: cover;
+                background-position: center;
+                z-index: -1;
+                filter: brightness(0.6);
+            }
+            .title-text {
+                font-size: 32px;
+                color: white;
+                font-weight: bold;
+                text-align: center;
+                padding: 30px;
+            }
+            .button-container {
+                display: flex;
+                justify-content: center;
+                padding-top: 20px;
+            }
+            .connect-button button {
+                font-size: 24px !important;
+                background-color: #1E1E1E !important;
+                color: white !important;
+                border-radius: 8px !important;
+                padding: 12px 30px !important;
+            }
+        </style>
+        <div class="background"></div>
+        <div class="title-text">
+            Computer Vision-Based Drone Pineapple Maturity Detection:<br>Fuzzy Logic and YOLO
+        </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("""<div style='text-align: center;'>""", unsafe_allow_html=True)
+    # Connect Button
+    st.markdown("<div class='button-container connect-button'>", unsafe_allow_html=True)
     if st.button("Connect", key="connect"):
         st.session_state.page = 'about'
-    st.markdown("""</div>""", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # === About Page ===
 def about_page():
