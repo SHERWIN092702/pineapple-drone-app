@@ -32,23 +32,6 @@ if 'page' not in st.session_state:
 
 # === Home Page ===
 def home_page():
-    st.markdown("""
-        <style>
-        .custom-connect-container {
-            position: absolute;
-            top: 60%;   /* Adjust vertical position */
-            left: 90%;  /* Adjust horizontal position */
-            transform: translate(-50%, 0%);
-            text-align: center;
-        }
-        .custom-connect-container button {
-            font-size: 24px !important;
-            padding: 12px 30px !important;
-            border-radius: 10px !important;
-        }
-        </style>
-    """, unsafe_allow_html=True)
-
     # Title
     st.markdown("""
         <div class="overlay">
@@ -56,11 +39,12 @@ def home_page():
         </div>
     """, unsafe_allow_html=True)
 
-    # Connect button with adjustable position
-    st.markdown('<div class="custom-connect-container">', unsafe_allow_html=True)
-    if st.button("Connect", use_container_width=False):
-        st.session_state.page = "about"
-    st.markdown('</div>', unsafe_allow_html=True)
+    # Connect button centered using 3-column layout
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        if st.button("Connect", use_container_width=True):
+            st.session_state.page = "about"
+
 
 
 # === About Page ===
