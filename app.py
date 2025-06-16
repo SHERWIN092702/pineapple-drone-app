@@ -37,7 +37,7 @@ def home_page():
         .custom-connect-container {
             position: absolute;
             top: 60%;   /* Adjust vertical position */
-            left: 60%;  /* Adjust horizontal position */
+            left: 90%;  /* Adjust horizontal position */
             transform: translate(-50%, -50%);
             text-align: center;
         }
