@@ -44,7 +44,7 @@ def home_page():
 
         .connect-button-container {
             position: absolute;
-            top: 35%;
+            top: 100%;
             left: 55%;
             transform: translate(-50%, -50%);
             text-align: center;
