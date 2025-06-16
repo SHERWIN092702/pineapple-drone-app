@@ -39,7 +39,10 @@ def home_page():
         </div>
     """, unsafe_allow_html=True)
 
-    # Connect button centered using 3-column layout
+    # Spacer to push the button down
+    st.markdown("<br><br><br>", unsafe_allow_html=True)  # adjust the number of <br> as needed
+
+    # Connect button centered
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         if st.button("Connect", use_container_width=True):
