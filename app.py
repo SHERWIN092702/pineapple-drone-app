@@ -32,23 +32,20 @@ if 'page' not in st.session_state:
 
 # === Home Page ===
 def home_page():
-    # Title overlay (fixed size, stays up top)
+    # Title overlay
     st.markdown("""
         <div class="overlay" style="margin-top: 80px;">
             <h1>Computer Vision-Based Drone Pineapple Maturity Detection:<br>Fuzzy Logic and YOLO</h1>
         </div>
     """, unsafe_allow_html=True)
 
-    # Manual spacing
-    st.markdown("<div style='height: 100px;'></div>", unsafe_allow_html=True)  # ⬅ adjust height here
+    st.markdown("<div style='height: 100px;'></div>", unsafe_allow_html=True)
 
-    # Connect button centered
+    # Centered Connect button
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         if st.button("Connect", use_container_width=True):
             st.session_state.page = "about"
-
-
 
 # === About Page ===
 def about_page():
@@ -70,6 +67,7 @@ def about_page():
 
     st.markdown("</div>", unsafe_allow_html=True)
 
+    # Centered START button
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         if st.button("START", key="start_from_about", use_container_width=True):
@@ -83,19 +81,29 @@ def control_panel():
         </div>
     """, unsafe_allow_html=True)
 
-    col1, col2 = st.columns(2)
-
-    with col1:
+    # START
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
         if st.button("START", key="start", use_container_width=True):
             st.success("START button clicked")
-        if st.button("EXIT", key="exit", use_container_width=True):
-            st.session_state.page = 'home'
 
+    # STOP
+    col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         if st.button("STOP", key="stop", use_container_width=True):
             st.warning("STOP button clicked")
+
+    # RESULTS
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
         if st.button("RESULTS", key="results", use_container_width=True):
             st.session_state.page = 'results'
+
+    # EXIT
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        if st.button("EXIT", key="exit", use_container_width=True):
+            st.session_state.page = 'home'
 
 # === Results Page ===
 def results_page():
@@ -116,6 +124,7 @@ def results_page():
         </div>
     """, unsafe_allow_html=True)
 
+    # Centered EXIT button
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         if st.button("EXIT", key="exit_results", use_container_width=True):
