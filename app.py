@@ -9,8 +9,8 @@ def get_base64_image(file_path):
     return base64.b64encode(data).decode()
 
 # Load background image
-bg_image = Image.open("bg1.jpg")
-encoded_bg = get_base64_image("bg1.jpg")
+bg_image = Image.open("background.jpg")
+encoded_bg = get_base64_image("background.jpg")
 
 # Page state management
 if 'page' not in st.session_state:
