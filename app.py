@@ -32,16 +32,15 @@ if 'page' not in st.session_state:
 
 # === Home Page ===
 def home_page():
-    # Title overlay
     st.markdown("""
         <div class="overlay" style="margin-top: 80px;">
             <h1>Computer Vision-Based Drone Pineapple Maturity Detection:<br>Fuzzy Logic and YOLO</h1>
         </div>
     """, unsafe_allow_html=True)
 
+    # Spacing before Connect button
     st.markdown("<div style='height: 100px;'></div>", unsafe_allow_html=True)
 
-    # Centered Connect button
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         if st.button("Connect", use_container_width=True):
@@ -67,7 +66,9 @@ def about_page():
 
     st.markdown("</div>", unsafe_allow_html=True)
 
-    # Centered START button
+    # Spacing before START button
+    st.markdown("<div style='height: 80px;'></div>", unsafe_allow_html=True)
+
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         if st.button("START", key="start_from_about", use_container_width=True):
@@ -82,24 +83,28 @@ def control_panel():
     """, unsafe_allow_html=True)
 
     # START
+    st.markdown("<div style='height: 50px;'></div>", unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         if st.button("START", key="start", use_container_width=True):
             st.success("START button clicked")
 
     # STOP
+    st.markdown("<div style='height: 30px;'></div>", unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         if st.button("STOP", key="stop", use_container_width=True):
             st.warning("STOP button clicked")
 
     # RESULTS
+    st.markdown("<div style='height: 30px;'></div>", unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         if st.button("RESULTS", key="results", use_container_width=True):
             st.session_state.page = 'results'
 
     # EXIT
+    st.markdown("<div style='height: 30px;'></div>", unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         if st.button("EXIT", key="exit", use_container_width=True):
@@ -124,7 +129,8 @@ def results_page():
         </div>
     """, unsafe_allow_html=True)
 
-    # Centered EXIT button
+    # Spacing before EXIT button
+    st.markdown("<div style='height: 80px;'></div>", unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         if st.button("EXIT", key="exit_results", use_container_width=True):
