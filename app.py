@@ -10,33 +10,26 @@ if 'page' not in st.session_state:
 
 # === Home Page ===
 def home_page():
-    # Display the full background image at the top
-    st.image("bg1.jpg", use_container_width=True)
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background-image: url("bg1.jpg");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
-    # Use an empty container for layout control
-    with st.container():
-        st.markdown(
-            "<h2 style='text-align: center; color: white; background-color: black; padding: 20px;'>"
-            "Computer Vision-Based Drone Pineapple Maturity Detection:<br>Fuzzy Logic and YOLO"
-            "</h2>",
-            unsafe_allow_html=True
-        )
+    # Temporary placeholder to see the effect
+    st.write("")
+    st.write("")
+    st.write("### Background loaded!")
 
-        # Drone status box (centered)
-        st.markdown(
-            "<div style='background-color:#1E1E1E; color:#EBFFEE; text-align:center; "
-            "width:400px; margin:auto; padding:20px; border-radius:10px;'>"
-            "<p style='font-size:16px;'>Not Connected</p>"
-            "<p style='font-size:28px; font-family:Roboto;'>DJI Mini 3</p>"
-            "</div>",
-            unsafe_allow_html=True
-        )
-
-        # Connect Button
-        st.markdown("<div style='text-align:center; margin-top:40px;'>", unsafe_allow_html=True)
-        if st.button("Connect", key="connect"):
-            st.session_state.page = 'about'
-        st.markdown("</div>", unsafe_allow_html=True)
 
 
 
