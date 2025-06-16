@@ -38,7 +38,7 @@ def home_page():
             position: absolute;
             top: 60%;   /* Adjust vertical position */
             left: 90%;  /* Adjust horizontal position */
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, 0%);
             text-align: center;
         }
         .custom-connect-container button {
