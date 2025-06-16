@@ -10,7 +10,7 @@ if 'page' not in st.session_state:
 
 # === Home Page ===
 def home_page():
-    st.image(bg_image, use_column_width=True)
+    st.image(bg_image, use_container_width=True)
     st.markdown("""
         <h1 style='text-align: center; color: white; background-color: black; padding: 20px;'>
         Computer Vision-Based Drone Pineapple Maturity Detection:<br>Fuzzy Logic and YOLO
@@ -24,7 +24,7 @@ def home_page():
 
 # === About Page ===
 def about_page():
-    st.image(bg_image, use_column_width=True)
+    st.image(bg_image, use_container_width=True)
     st.markdown("<h2 style='color: white;'>HOW IT WORKS:</h2>", unsafe_allow_html=True)
 
     instructions = [
@@ -43,7 +43,7 @@ def about_page():
 
 # === Control Panel Page ===
 def control_panel():
-    st.image(bg_image, use_column_width=True)
+    st.image(bg_image, use_container_width=True)
     col1, col2 = st.columns(2)
 
     with col1:
@@ -60,7 +60,7 @@ def control_panel():
 
 # === Results Page ===
 def results_page():
-    st.image(bg_image, use_column_width=True)
+    st.image(bg_image, use_container_width=True)
     st.markdown("""
         <div style='display: flex; justify-content: space-around; padding-top: 20px;'>
             <div style='background-color: gray; padding: 30px; width: 30%;'>
