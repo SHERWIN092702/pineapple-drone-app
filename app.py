@@ -1,16 +1,4 @@
 import streamlit as st
-from PIL import Image
-import base64
-
-# === Function to convert image to base64 ===
-def get_base64_image(file_path):
-    with open(file_path, "rb") as f:
-        data = f.read()
-    return base64.b64encode(data).decode()
-
-# Load background image
-bg_image = Image.open("background.jpg")
-encoded_bg = get_base64_image("background.jpg")
 
 # Page state management
 if 'page' not in st.session_state:
@@ -18,27 +6,26 @@ if 'page' not in st.session_state:
 
 # === Home Page ===
 def home_page():
-    # Inject background image as CSS
+    # Full background image at top
+    st.image("background.jpg", use_container_width=True)
+
+    # Title
     st.markdown(
-        f"""
-        <style>
-        .stApp {{
-            background-image: url("data:image/jpg;base64,{encoded_bg}");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-        }}
-        </style>
-        """,
+        "<h2 style='text-align:center; color:white; background-color:black; padding:20px;'>"
+        "Computer Vision-Based Drone Pineapple Maturity Detection:<br>Fuzzy Logic and YOLO"
+        "</h2>",
         unsafe_allow_html=True
     )
 
-    st.markdown("""<br><br><br><h2 style='text-align:center; color:white;'>Background loaded!</h2>""", unsafe_allow_html=True)
+    # Connect button
+    st.markdown("<div style='text-align:center;'>", unsafe_allow_html=True)
+    if st.button("Connect", key="connect"):
+        st.session_state.page = 'about'
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # === About Page ===
 def about_page():
-    st.image(bg_image, use_container_width=True)
+    st.image("background.jpg", use_container_width=True)
     st.markdown("<h2 style='color: white;'>HOW IT WORKS:</h2>", unsafe_allow_html=True)
 
     instructions = [
@@ -57,7 +44,7 @@ def about_page():
 
 # === Control Panel Page ===
 def control_panel():
-    st.image(bg_image, use_container_width=True)
+    st.image("background.jpg", use_container_width=True)
     col1, col2 = st.columns(2)
 
     with col1:
@@ -74,7 +61,7 @@ def control_panel():
 
 # === Results Page ===
 def results_page():
-    st.image(bg_image, use_container_width=True)
+    st.image("background.jpg", use_container_width=True)
     st.markdown("""
         <div style='display: flex; justify-content: space-around; padding-top: 20px;'>
             <div style='background-color: gray; padding: 30px; width: 30%;'>
