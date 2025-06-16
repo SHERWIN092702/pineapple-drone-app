@@ -82,33 +82,23 @@ def control_panel():
         </div>
     """, unsafe_allow_html=True)
 
-    # START
+    # START + EXIT
     st.markdown("<div style='height: 50px;'></div>", unsafe_allow_html=True)
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
+    col1, col2 = st.columns(2)
+    with col1:
         if st.button("START", key="start", use_container_width=True):
             st.success("START button clicked")
+        st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
+        if st.button("EXIT", key="exit", use_container_width=True):
+            st.session_state.page = 'home'
 
-    # STOP
-    st.markdown("<div style='height: 30px;'></div>", unsafe_allow_html=True)
-    col1, col2, col3 = st.columns([1, 2, 1])
+    # STOP + RESULTS
     with col2:
         if st.button("STOP", key="stop", use_container_width=True):
             st.warning("STOP button clicked")
-
-    # RESULTS
-    st.markdown("<div style='height: 30px;'></div>", unsafe_allow_html=True)
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
+        st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
         if st.button("RESULTS", key="results", use_container_width=True):
             st.session_state.page = 'results'
-
-    # EXIT
-    st.markdown("<div style='height: 30px;'></div>", unsafe_allow_html=True)
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        if st.button("EXIT", key="exit", use_container_width=True):
-            st.session_state.page = 'home'
 
 # === Results Page ===
 def results_page():
