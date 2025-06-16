@@ -6,21 +6,54 @@ if 'page' not in st.session_state:
 
 # === Home Page ===
 def home_page():
-    # Full background image at top
-    st.image("background.jpg", use_container_width=True)
+    # Inject real background image via CSS using your GitHub-hosted image
+    st.markdown("""
+        <style>
+        .stApp {
+            background-image: url("https://github.com/SHERWIN092702/pineapple-drone-app/blob/main/background.jpg?raw=true");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .overlay-box {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 800px;
+            margin: 100px auto 30px auto;
+        }
+        .title-text {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 1.5;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+        .button-container button {
+            font-size: 24px;
+            padding: 10px 30px;
+        }
+        </style>
+    """, unsafe_allow_html=True)
 
-    # Title
+    # Overlay title and button content
+    st.markdown("<div class='overlay-box'>", unsafe_allow_html=True)
     st.markdown(
-        "<h2 style='text-align:center; color:white; background-color:black; padding:20px;'>"
+        "<div class='title-text'>"
         "Computer Vision-Based Drone Pineapple Maturity Detection:<br>Fuzzy Logic and YOLO"
-        "</h2>",
+        "</div>",
         unsafe_allow_html=True
     )
+    st.markdown("</div>", unsafe_allow_html=True)
 
-    # Connect button
-    st.markdown("<div style='text-align:center;'>", unsafe_allow_html=True)
-    if st.button("Connect", key="connect"):
-        st.session_state.page = 'about'
+    st.markdown("<div class='button-container'>", unsafe_allow_html=True)
+    if st.button("Connect"):
+        st.session_state.page = "about"
     st.markdown("</div>", unsafe_allow_html=True)
 
 # === About Page ===
