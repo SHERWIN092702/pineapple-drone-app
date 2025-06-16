@@ -1,6 +1,6 @@
 import streamlit as st
 
-# Inject background CSS globally
+# === Global CSS Background + Styling ===
 st.markdown("""
     <style>
     .stApp {
@@ -23,14 +23,10 @@ st.markdown("""
     .overlay h1, .overlay h2, .overlay p {
         color: white;
     }
-    .centered-btn {
-        text-align: center;
-        margin-top: 30px;
-    }
     </style>
 """, unsafe_allow_html=True)
 
-# Page state management
+# === Page State ===
 if 'page' not in st.session_state:
     st.session_state.page = 'home'
 
@@ -42,10 +38,10 @@ def home_page():
         </div>
     """, unsafe_allow_html=True)
 
-    st.markdown('<div class="centered-btn">', unsafe_allow_html=True)
-    if st.button("Connect"):
-        st.session_state.page = "about"
-    st.markdown('</div>', unsafe_allow_html=True)
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        if st.button("Connect", use_container_width=True):
+            st.session_state.page = "about"
 
 # === About Page ===
 def about_page():
@@ -63,35 +59,35 @@ def about_page():
 
     cols = st.columns(2)
     for i, text in enumerate(instructions):
-        cols[i % 2].markdown(f"<p>{text}</p>", unsafe_allow_html=True)
+        cols[i % 2].markdown(f"<p style='color:white;'>{text}</p>", unsafe_allow_html=True)
 
     st.markdown("</div>", unsafe_allow_html=True)
 
-    st.markdown('<div class="centered-btn">', unsafe_allow_html=True)
-    if st.button("START", key="start_from_about"):
-        st.session_state.page = 'control'
-    st.markdown('</div>', unsafe_allow_html=True)
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        if st.button("START", key="start_from_about", use_container_width=True):
+            st.session_state.page = 'control'
 
 # === Control Panel Page ===
 def control_panel():
     st.markdown("""
         <div class="overlay">
-            <h2>Control Panel</h2>
+            <h2>CONTROL PANEL</h2>
         </div>
     """, unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
 
     with col1:
-        if st.button("START", key="start"):
+        if st.button("START", key="start", use_container_width=True):
             st.success("START button clicked")
-        if st.button("EXIT", key="exit"):
+        if st.button("EXIT", key="exit", use_container_width=True):
             st.session_state.page = 'home'
 
     with col2:
-        if st.button("STOP", key="stop"):
+        if st.button("STOP", key="stop", use_container_width=True):
             st.warning("STOP button clicked")
-        if st.button("RESULTS", key="results"):
+        if st.button("RESULTS", key="results", use_container_width=True):
             st.session_state.page = 'results'
 
 # === Results Page ===
@@ -113,10 +109,10 @@ def results_page():
         </div>
     """, unsafe_allow_html=True)
 
-    st.markdown('<div class="centered-btn">', unsafe_allow_html=True)
-    if st.button("EXIT", key="exit_results"):
-        st.session_state.page = 'control'
-    st.markdown('</div>', unsafe_allow_html=True)
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        if st.button("EXIT", key="exit_results", use_container_width=True):
+            st.session_state.page = 'control'
 
 # === Page Router ===
 if st.session_state.page == 'home':
