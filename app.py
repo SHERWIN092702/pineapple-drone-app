@@ -32,15 +32,15 @@ if 'page' not in st.session_state:
 
 # === Home Page ===
 def home_page():
-    # Title
+    # Title overlay (fixed size, stays up top)
     st.markdown("""
-        <div class="overlay">
+        <div class="overlay" style="margin-top: 80px;">
             <h1>Computer Vision-Based Drone Pineapple Maturity Detection:<br>Fuzzy Logic and YOLO</h1>
         </div>
     """, unsafe_allow_html=True)
 
-    # Spacer to push the button down
-    st.markdown("<br><br><br>", unsafe_allow_html=True)  # adjust the number of <br> as needed
+    # Manual spacing
+    st.markdown("<div style='height: 100px;'></div>", unsafe_allow_html=True)  # ⬅ adjust height here
 
     # Connect button centered
     col1, col2, col3 = st.columns([1, 2, 1])
