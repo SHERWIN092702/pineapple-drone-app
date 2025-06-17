@@ -1,4 +1,5 @@
 import streamlit as st
+import subprocess
 
 # === Global CSS Background + Styling ===
 st.markdown("""
@@ -38,9 +39,7 @@ def home_page():
         </div>
     """, unsafe_allow_html=True)
 
-    # Spacing before Connect button
     st.markdown("<div style='height: 100px;'></div>", unsafe_allow_html=True)
-
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         if st.button("Connect", use_container_width=True):
@@ -55,9 +54,9 @@ def about_page():
 
     instructions = [
         "1.) Download the DJI fly app and connect the drone to your device.",
-        "2.) Press the start button to begin the pineapple maturity detection.",
-        "3.) Press the stop button to end the pineapple maturity detection.",
-        "4.) Press the result button to view the results and press exit to quit."
+        "2.) Press the START button to begin the pineapple maturity detection.",
+        "3.) Press the STOP button to end the detection.",
+        "4.) Press the RESULTS button to view output. Press EXIT to quit."
     ]
 
     cols = st.columns(2)
@@ -65,10 +64,7 @@ def about_page():
         cols[i % 2].markdown(f"<p style='color:white;'>{text}</p>", unsafe_allow_html=True)
 
     st.markdown("</div>", unsafe_allow_html=True)
-
-    # Spacing before START button
     st.markdown("<div style='height: 80px;'></div>", unsafe_allow_html=True)
-
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         if st.button("START", key="start_from_about", use_container_width=True):
@@ -82,21 +78,25 @@ def control_panel():
         </div>
     """, unsafe_allow_html=True)
 
-    # START + EXIT
     st.markdown("<div style='height: 50px;'></div>", unsafe_allow_html=True)
     col1, col2 = st.columns(2)
+
     with col1:
         if st.button("START", key="start", use_container_width=True):
-            st.success("START button clicked")
+            subprocess.Popen(["python3", "model11.py"])
+            st.success("✅ Detection started! Press 'q' in the detection window to stop.")
+
         st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
+
         if st.button("EXIT", key="exit", use_container_width=True):
             st.session_state.page = 'home'
 
-    # STOP + RESULTS
     with col2:
         if st.button("STOP", key="stop", use_container_width=True):
-            st.warning("STOP button clicked")
+            st.warning("🛑 To stop detection, press 'q' in the OpenCV window.")
+
         st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
+
         if st.button("RESULTS", key="results", use_container_width=True):
             st.session_state.page = 'results'
 
@@ -119,7 +119,6 @@ def results_page():
         </div>
     """, unsafe_allow_html=True)
 
-    # Spacing before EXIT button
     st.markdown("<div style='height: 80px;'></div>", unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
