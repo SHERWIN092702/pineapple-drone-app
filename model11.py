@@ -1,33 +1,33 @@
 import cv2
-import numpy as np
-from mss import mss
 from ultralytics import YOLO
 
-# === Load YOLO Model ===
-# Make sure this path matches your actual model location
-model = YOLO('/home/rpi5/Desktop/yolo_object/best.pt')  # <- or best_ncnn_model if you're using NCNN export
+# === Load your trained model ===
+model = YOLO("best.pt")  # Ensure best.pt is in the same folder
 
-# === Screen Region to Capture (adjust as needed for uxplay window) ===
-bounding_box = {'top': 50, 'left': 0, 'width': 1920, 'height': 850}
-sct = mss()
+# === Load the test video ===
+video_path = "test_video.mp4"  # Replace with your actual filename if different
+cap = cv2.VideoCapture(video_path)
 
-print("[INFO] Starting detection... Press 'q' to stop.")
+if not cap.isOpened():
+    print("[ERROR] Could not open video file.")
+    exit()
+
+print("[INFO] Running detection on test video...")
 
 while True:
-    # Capture screen
-    sct_img = sct.grab(bounding_box)
-    frame = np.array(sct_img)[:, :, :3]  # drop alpha channel
+    ret, frame = cap.read()
+    if not ret:
+        break  # End of video
 
-    # Run YOLO detection
+    # Run detection
     results = model(frame)
-    annotated_frame = results[0].plot()
+    annotated = results[0].plot()
 
-    # Show annotated result
-    cv2.imshow("Pineapple Maturity Detection", annotated_frame)
+    # Show result
+    cv2.imshow("Pineapple Detection (Test Video)", annotated)
 
-    # Exit on 'q'
     if cv2.waitKey(1) & 0xFF == ord('q'):
-        print("[INFO] Detection stopped.")
         break
 
+cap.release()
 cv2.destroyAllWindows()
