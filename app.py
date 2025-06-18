@@ -2,7 +2,7 @@ import streamlit as st
 import subprocess
 import sys
 
-# === Global CSS Background + Styling (Simplified Overlay) ===
+# === Global CSS Background + Styling ===
 st.markdown("""
     <style>
     .stApp {
@@ -31,7 +31,6 @@ if 'page' not in st.session_state:
 # === Home Page ===
 def home_page():
     st.markdown("<div class='overlay'><h1>Drone Pineapple Maturity Detection</h1></div>", unsafe_allow_html=True)
-    st.write("📍 Debug: You are on the HOME page")
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         if st.button("Connect", use_container_width=True):
@@ -40,7 +39,6 @@ def home_page():
 # === About Page ===
 def about_page():
     st.markdown("<div class='overlay'><h2>HOW IT WORKS:</h2></div>", unsafe_allow_html=True)
-    st.write("📍 Debug: You are on the ABOUT page")
 
     instructions = [
         "1. Download the DJI Fly app and connect the drone.",
@@ -60,11 +58,21 @@ def about_page():
 # === Control Panel Page ===
 def control_panel():
     st.markdown("<div class='overlay'><h2>CONTROL PANEL</h2></div>", unsafe_allow_html=True)
-    st.write("📍 Debug: You are on the CONTROL page")
 
-    # RADIO: Choose mode
+    # === Add Background Box Around Input Mode ===
+    st.markdown("""
+        <div style="
+            background-color: rgba(0, 0, 0, 0.6); 
+            padding: 20px; 
+            border-radius: 10px; 
+            margin: 20px auto; 
+            max-width: 600px;
+        ">
+    """, unsafe_allow_html=True)
+
     mode = st.radio("Choose input mode:", ["Live (UX Play)", "Test Video"], horizontal=True)
-    st.write(f"🎛️ Mode selected: **{mode}**")
+
+    st.markdown("</div>", unsafe_allow_html=True)  # Close the box
 
     col1, col2 = st.columns(2)
 
@@ -72,11 +80,10 @@ def control_panel():
         if st.button("START", key="start", use_container_width=True):
             try:
                 if mode == "Live (UX Play)":
-                    subprocess.Popen(["C:\\Path\\To\\uxplay.exe"])  # 🔁 Update path
+                    subprocess.Popen(["C:\\Path\\To\\uxplay.exe"])  # 🔁 Update this path
                     subprocess.Popen([sys.executable, "model11.py", "live"])
                 else:
                     subprocess.Popen([sys.executable, "model11.py", "test"])
-
                 st.success(f"✅ Detection started using {mode}!")
             except FileNotFoundError as e:
                 st.error(f"❌ Failed to start: {e}")
@@ -90,7 +97,6 @@ def control_panel():
 
         if st.button("RESULTS", key="results", use_container_width=True):
             st.session_state.page = 'results'
-
 # === Results Page ===
 def results_page():
     st.markdown("""
@@ -103,7 +109,6 @@ def results_page():
             </div>
         </div>
     """, unsafe_allow_html=True)
-    st.write("📍 Debug: You are on the RESULTS page")
 
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
