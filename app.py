@@ -12,18 +12,14 @@ st.markdown("""
         background-repeat: no-repeat;
         background-attachment: fixed;
     }
-    .input-container {
+    .overlay {
         background-color: rgba(0, 0, 0, 0.6);
-        padding: 30px;
+        padding: 40px;
         border-radius: 12px;
-        margin: 30px auto;
-        max-width: 600px;
         color: white;
-    }
-    .input-container h3 {
-        color: white;
+        margin: 40px auto;
+        max-width: 800px;
         text-align: center;
-        margin-bottom: 20px;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -31,6 +27,9 @@ st.markdown("""
 # === Page State ===
 if 'page' not in st.session_state:
     st.session_state.page = 'home'
+
+if 'input_mode' not in st.session_state:
+    st.session_state.input_mode = 'Live (UX Play)'
 
 # === Home Page ===
 def home_page():
@@ -63,15 +62,28 @@ def about_page():
 def control_panel():
     st.markdown("<div class='overlay'><h2>CONTROL PANEL</h2></div>", unsafe_allow_html=True)
 
-    st.markdown('<div class="input-container"><h3>Choose input mode:</h3>', unsafe_allow_html=True)
-    mode = st.radio("", ["Live (UX Play)", "Test Video"], horizontal=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown("### <span style='color:white;'>Choose Input Mode:</span>", unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
-
     with col1:
+        if st.button("Live (UX Play)", use_container_width=True):
+            st.session_state.input_mode = "Live (UX Play)"
+    with col2:
+        if st.button("Test Video", use_container_width=True):
+            st.session_state.input_mode = "Test Video"
+
+    st.markdown(
+        f"<div style='color:white; text-align:center; margin-top:10px;'>Selected Mode: "
+        f"<span style='color:#90ee90; font-weight:bold;'>{st.session_state.input_mode}</span></div>",
+        unsafe_allow_html=True
+    )
+
+    col3, col4 = st.columns(2)
+
+    with col3:
         if st.button("START", key="start", use_container_width=True):
             try:
+                mode = st.session_state.input_mode
                 if mode == "Live (UX Play)":
                     subprocess.Popen(["C:\\Path\\To\\uxplay.exe"])  # 🔁 Update this path
                     subprocess.Popen([sys.executable, "model11.py", "live"])
@@ -84,7 +96,7 @@ def control_panel():
         if st.button("EXIT", key="exit", use_container_width=True):
             st.session_state.page = 'home'
 
-    with col2:
+    with col4:
         if st.button("STOP", key="stop", use_container_width=True):
             st.warning("🛑 Manually close or press 'q' in the OpenCV window.")
 
