@@ -21,23 +21,6 @@ st.markdown("""
         max-width: 800px;
         text-align: center;
     }
-    .mode-button {
-        border: none;
-        padding: 10px 20px;
-        margin: 5px;
-        font-size: 16px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-weight: bold;
-    }
-    .selected {
-        background-color: #00cc66 !important;
-        color: white !important;
-    }
-    .unselected {
-        background-color: #cccccc;
-        color: black;
-    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -46,7 +29,7 @@ if 'page' not in st.session_state:
     st.session_state.page = 'home'
 
 if 'input_mode' not in st.session_state:
-    st.session_state.input_mode = 'Live (UX Play)'
+    st.session_state.input_mode = "Live (UX Play)"  # Default selection
 
 # === Home Page ===
 def home_page():
@@ -79,32 +62,33 @@ def about_page():
 def control_panel():
     st.markdown("<div class='overlay'><h2>CONTROL PANEL</h2></div>", unsafe_allow_html=True)
 
-    st.markdown("### <span style='color:white;'>Choose Input Mode:</span>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align: center;'><h4 style='color:white;'>Choose Input Mode:</h4></div>", unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
     with col1:
-        if st.button("Live (UX Play)", key="live_mode", use_container_width=True):
+        if st.button("Live (UX Play)", use_container_width=True):
             st.session_state.input_mode = "Live (UX Play)"
     with col2:
-        if st.button("Test Video", key="test_mode", use_container_width=True):
+        if st.button("Test Video", use_container_width=True):
             st.session_state.input_mode = "Test Video"
 
-    # Highlight selected
-    st.markdown(f"""
+    mode = st.session_state.input_mode
+    st.markdown(
+        f"""
         <div style='text-align: center; margin-top: 10px;'>
-            <button class='mode-button {"selected" if st.session_state.input_mode == "Live (UX Play)" else "unselected"}'>Live (UX Play)</button>
-            <button class='mode-button {"selected" if st.session_state.input_mode == "Test Video" else "unselected"}'>Test Video</button>
+            <span style='background-color: {"#00cc66" if mode=="Live (UX Play)" else "#555"}; color:white; padding:10px 20px; border-radius:8px; margin-right:10px;'>Live (UX Play)</span>
+            <span style='background-color: {"#00cc66" if mode=="Test Video" else "#555"}; color:white; padding:10px 20px; border-radius:8px;'>Test Video</span>
         </div>
-    """, unsafe_allow_html=True)
+        """,
+        unsafe_allow_html=True,
+    )
 
     col3, col4 = st.columns(2)
-
     with col3:
         if st.button("START", key="start", use_container_width=True):
             try:
-                mode = st.session_state.input_mode
                 if mode == "Live (UX Play)":
-                    subprocess.Popen(["C:\\Path\\To\\uxplay.exe"])  # 🔁 Update this path
+                    subprocess.Popen(["C:\\Path\\To\\uxplay.exe"])  # Change this path
                     subprocess.Popen([sys.executable, "model11.py", "live"])
                 else:
                     subprocess.Popen([sys.executable, "model11.py", "test"])
@@ -118,7 +102,6 @@ def control_panel():
     with col4:
         if st.button("STOP", key="stop", use_container_width=True):
             st.warning("🛑 Manually close or press 'q' in the OpenCV window.")
-
         if st.button("RESULTS", key="results", use_container_width=True):
             st.session_state.page = 'results'
 
