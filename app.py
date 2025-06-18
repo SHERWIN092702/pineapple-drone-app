@@ -12,23 +12,18 @@ st.markdown("""
         background-repeat: no-repeat;
         background-attachment: fixed;
     }
-    .overlay {
+    .input-container {
         background-color: rgba(0, 0, 0, 0.6);
-        padding: 40px;
-        border-radius: 12px;
-        color: white;
-        margin: 40px auto;
-        max-width: 800px;
-        text-align: center;
-    }
-    .boxed-radio {
-        background-color: rgba(0, 0, 0, 0.6);
-        padding: 25px;
+        padding: 30px;
         border-radius: 12px;
         margin: 30px auto;
         max-width: 600px;
         color: white;
-        font-size: 18px;
+    }
+    .input-container h3 {
+        color: white;
+        text-align: center;
+        margin-bottom: 20px;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -68,8 +63,8 @@ def about_page():
 def control_panel():
     st.markdown("<div class='overlay'><h2>CONTROL PANEL</h2></div>", unsafe_allow_html=True)
 
-    st.markdown('<div class="boxed-radio">', unsafe_allow_html=True)
-    mode = st.radio("Choose input mode:", ["Live (UX Play)", "Test Video"], horizontal=True)
+    st.markdown('<div class="input-container"><h3>Choose input mode:</h3>', unsafe_allow_html=True)
+    mode = st.radio("", ["Live (UX Play)", "Test Video"], horizontal=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
