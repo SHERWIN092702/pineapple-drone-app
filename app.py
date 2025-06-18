@@ -72,6 +72,8 @@ def about_page():
 
 # === Control Panel Page ===
 def control_panel():
+    import sys
+
     st.markdown("""
         <div class="overlay">
             <h2>CONTROL PANEL</h2>
@@ -83,8 +85,16 @@ def control_panel():
 
     with col1:
         if st.button("START", key="start", use_container_width=True):
-            subprocess.Popen(["python3", "model11.py"])
-            st.success("✅ Detection started! Press 'q' in the detection window to stop.")
+            try:
+                # Run uxplay (adjust the path as needed)
+                subprocess.Popen(["C:\\Path\\To\\uxplay.exe"])  # Replace with your actual path
+
+                # Run model11.py with current Python interpreter
+                subprocess.Popen([sys.executable, "model11.py"])
+
+                st.success("✅ Detection started! 'uxplay' and 'model11.py' launched. Press 'q' in the detection window to stop.")
+            except FileNotFoundError as e:
+                st.error(f"Failed to start: {e}")
 
         st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
 
@@ -93,13 +103,12 @@ def control_panel():
 
     with col2:
         if st.button("STOP", key="stop", use_container_width=True):
-            st.warning("🛑 To stop detection, press 'q' in the OpenCV window.")
+            st.warning("🛑 To stop detection, press 'q' in the OpenCV window or close the camera feed.")
 
         st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
 
         if st.button("RESULTS", key="results", use_container_width=True):
             st.session_state.page = 'results'
-
 # === Results Page ===
 def results_page():
     st.markdown("""
