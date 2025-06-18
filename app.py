@@ -64,11 +64,13 @@ def control_panel():
 
     st.markdown("<div style='text-align: center;'><h4 style='color:white;'>Choose Input Mode:</h4></div>", unsafe_allow_html=True)
 
-    # Initialize selected mode
-    if 'input_mode' not in st.session_state:
-        st.session_state.input_mode = "Live (UX Play)"
+    # Define button labels
+    modes = ["Live (UX Play)", "Test Video"]
+    selected = st.session_state.get("input_mode", "Live (UX Play)")
 
+    # Custom button styles using HTML and Streamlit columns
     col1, col2 = st.columns(2)
+
     with col1:
         if st.button("Live (UX Play)", use_container_width=True):
             st.session_state.input_mode = "Live (UX Play)"
@@ -76,48 +78,36 @@ def control_panel():
         if st.button("Test Video", use_container_width=True):
             st.session_state.input_mode = "Test Video"
 
-    # Highlight selected input mode
-    selected_mode = st.session_state.input_mode
-    st.markdown(
-        f"""
-        <style>
-        .highlight-container {{
-            display: flex;
-            justify-content: center;
-            margin-top: 10px;
-            gap: 20px;
-        }}
-        .highlight-box {{
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: bold;
-            color: white;
-        }}
-        .selected {{
-            background-color: #00cc66;
-        }}
-        .unselected {{
-            background-color: #555;
-        }}
-        </style>
-        <div class="highlight-container">
-            <div class="highlight-box {'selected' if selected_mode == 'Live (UX Play)' else 'unselected'}">Live (UX Play)</div>
-            <div class="highlight-box {'selected' if selected_mode == 'Test Video' else 'unselected'}">Test Video</div>
+    # Show visual highlight of current selection
+    st.markdown(f"""
+        <div style='text-align: center; margin-top: 10px;'>
+            <span style='background-color: {"#00cc66" if selected == "Live (UX Play)" else "#555"};
+                         color: white;
+                         padding: 10px 24px;
+                         border-radius: 8px;
+                         margin: 5px;
+                         display: inline-block;'>Live (UX Play)</span>
+            <span style='background-color: {"#00cc66" if selected == "Test Video" else "#555"};
+                         color: white;
+                         padding: 10px 24px;
+                         border-radius: 8px;
+                         margin: 5px;
+                         display: inline-block;'>Test Video</span>
         </div>
-        """,
-        unsafe_allow_html=True
-    )
+    """, unsafe_allow_html=True)
 
+    # Control buttons
     col3, col4 = st.columns(2)
     with col3:
         if st.button("START", key="start", use_container_width=True):
             try:
-                if selected_mode == "Live (UX Play)":
+                mode = st.session_state.input_mode
+                if mode == "Live (UX Play)":
                     subprocess.Popen(["C:\\Path\\To\\uxplay.exe"])  # Adjust path
                     subprocess.Popen([sys.executable, "model11.py", "live"])
                 else:
                     subprocess.Popen([sys.executable, "model11.py", "test"])
-                st.success(f"✅ Detection started using {selected_mode}!")
+                st.success(f"✅ Detection started using {mode}!")
             except FileNotFoundError as e:
                 st.error(f"❌ Failed to start: {e}")
 
@@ -129,6 +119,7 @@ def control_panel():
             st.warning("🛑 Manually close or press 'q' in the OpenCV window.")
         if st.button("RESULTS", key="results", use_container_width=True):
             st.session_state.page = 'results'
+
 
 # === Results Page ===
 def results_page():
