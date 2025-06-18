@@ -1,5 +1,6 @@
 import streamlit as st
 import subprocess
+import sys
 
 # === Global CSS Background + Styling ===
 st.markdown("""
@@ -72,8 +73,6 @@ def about_page():
 
 # === Control Panel Page ===
 def control_panel():
-    import sys
-
     st.markdown("""
         <div class="overlay">
             <h2>CONTROL PANEL</h2>
@@ -91,7 +90,7 @@ def control_panel():
         if st.button("START", key="start", use_container_width=True):
             try:
                 if mode == "Live (UX Play)":
-                    subprocess.Popen(["C:\\Path\\To\\uxplay.exe"])  # Adjust as needed
+                    subprocess.Popen(["C:\\Path\\To\\uxplay.exe"])  # Change this to your uxplay path
                     subprocess.Popen([sys.executable, "model11.py", "live"])
                 else:
                     subprocess.Popen([sys.executable, "model11.py", "test"])
