@@ -80,21 +80,25 @@ def control_panel():
         </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("<div style='height: 50px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height: 30px;'></div>", unsafe_allow_html=True)
+
+    mode = st.radio("Choose input mode:", ["Live (UX Play)", "Test Video"], horizontal=True)
+
+    st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
     col1, col2 = st.columns(2)
 
     with col1:
         if st.button("START", key="start", use_container_width=True):
             try:
-                # Run uxplay (adjust the path as needed)
-                subprocess.Popen(["C:\\Path\\To\\uxplay.exe"])  # Replace with your actual path
+                if mode == "Live (UX Play)":
+                    subprocess.Popen(["C:\\Path\\To\\uxplay.exe"])  # Adjust as needed
+                    subprocess.Popen([sys.executable, "model11.py", "live"])
+                else:
+                    subprocess.Popen([sys.executable, "model11.py", "test"])
 
-                # Run model11.py with current Python interpreter
-                subprocess.Popen([sys.executable, "model11.py"])
-
-                st.success("✅ Detection started! 'uxplay' and 'model11.py' launched. Press 'q' in the detection window to stop.")
+                st.success(f"✅ Detection started using {'UX Play' if mode == 'Live (UX Play)' else 'Test Video'}!")
             except FileNotFoundError as e:
-                st.error(f"Failed to start: {e}")
+                st.error(f"❌ Failed to start: {e}")
 
         st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
 
@@ -103,12 +107,13 @@ def control_panel():
 
     with col2:
         if st.button("STOP", key="stop", use_container_width=True):
-            st.warning("🛑 To stop detection, press 'q' in the OpenCV window or close the camera feed.")
+            st.warning("🛑 Press 'q' in the OpenCV window or close the feed manually.")
 
         st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
 
         if st.button("RESULTS", key="results", use_container_width=True):
             st.session_state.page = 'results'
+
 # === Results Page ===
 def results_page():
     st.markdown("""
