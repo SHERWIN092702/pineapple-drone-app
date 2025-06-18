@@ -68,9 +68,8 @@ def control_panel():
     modes = ["Live (UX Play)", "Test Video"]
     selected = st.session_state.get("input_mode", "Live (UX Play)")
 
-    # Custom button styles using HTML and Streamlit columns
+    # Selection buttons
     col1, col2 = st.columns(2)
-
     with col1:
         if st.button("Live (UX Play)", use_container_width=True):
             st.session_state.input_mode = "Live (UX Play)"
@@ -78,9 +77,9 @@ def control_panel():
         if st.button("Test Video", use_container_width=True):
             st.session_state.input_mode = "Test Video"
 
-    # Show visual highlight of current selection
+    # Highlight the selected mode
     st.markdown(f"""
-        <div style='text-align: center; margin-top: 10px;'>
+        <div style='text-align: center; margin-top: 15px; margin-bottom: 30px;'>
             <span style='background-color: {"#00cc66" if selected == "Live (UX Play)" else "#555"};
                          color: white;
                          padding: 10px 24px;
@@ -95,6 +94,9 @@ def control_panel():
                          display: inline-block;'>Test Video</span>
         </div>
     """, unsafe_allow_html=True)
+
+    # Add a spacer
+    st.markdown("<br><br>", unsafe_allow_html=True)
 
     # Control buttons
     col3, col4 = st.columns(2)
@@ -119,7 +121,6 @@ def control_panel():
             st.warning("🛑 Manually close or press 'q' in the OpenCV window.")
         if st.button("RESULTS", key="results", use_container_width=True):
             st.session_state.page = 'results'
-
 
 # === Results Page ===
 def results_page():
