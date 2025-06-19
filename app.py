@@ -6,7 +6,7 @@ import sys
 st.markdown("""
     <style>
     .stApp {
-        background-image: url("https://github.com/SHERWIN092702/pineapple-drone-app/blob/main/background.jpg");
+        background-image: url("https://github.com/SHERWIN092702/pineapple-drone-app/blob/main/background.jpg?raw=true");
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
