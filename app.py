@@ -24,12 +24,13 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# === Page State ===
+# === Page State Initialization ===
 if 'page' not in st.session_state:
     st.session_state.page = 'home'
-
-if 'input_mode' not in st.session_state:
-    st.session_state.input_mode = "Live (UX Play)"  # Default selection
+if 'uxplay_proc' not in st.session_state:
+    st.session_state.uxplay_proc = None
+if 'detection_proc' not in st.session_state:
+    st.session_state.detection_proc = None
 
 # === Home Page ===
 def home_page():
@@ -42,7 +43,6 @@ def home_page():
 # === About Page ===
 def about_page():
     st.markdown("<div class='overlay'><h2>HOW IT WORKS:</h2></div>", unsafe_allow_html=True)
-
     instructions = [
         "1. Download the DJI Fly app and connect the drone.",
         "2. Press START to begin detection.",
@@ -62,55 +62,26 @@ def about_page():
 def control_panel():
     st.markdown("<div class='overlay'><h2>CONTROL PANEL</h2></div>", unsafe_allow_html=True)
 
-    st.markdown("<div style='text-align: center;'><h4 style='color:white;'>Choose Input Mode:</h4></div>", unsafe_allow_html=True)
-
-    # Define button labels
-    modes = ["Live (UX Play)", "Test Video"]
-    selected = st.session_state.get("input_mode", "Live (UX Play)")
-
-    # Selection buttons
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("Live (UX Play)", use_container_width=True):
-            st.session_state.input_mode = "Live (UX Play)"
-    with col2:
-        if st.button("Test Video", use_container_width=True):
-            st.session_state.input_mode = "Test Video"
-
-    # Highlight the selected mode
-    st.markdown(f"""
-        <div style='text-align: center; margin-top: 15px; margin-bottom: 30px;'>
-            <span style='background-color: {"#00cc66" if selected == "Live (UX Play)" else "#555"};
-                         color: white;
-                         padding: 10px 24px;
-                         border-radius: 8px;
-                         margin: 5px;
-                         display: inline-block;'>Live (UX Play)</span>
-            <span style='background-color: {"#00cc66" if selected == "Test Video" else "#555"};
-                         color: white;
-                         padding: 10px 24px;
-                         border-radius: 8px;
-                         margin: 5px;
-                         display: inline-block;'>Test Video</span>
-        </div>
-    """, unsafe_allow_html=True)
-
-    # Add a spacer
     st.markdown("<br><br>", unsafe_allow_html=True)
 
-    # Control buttons
     col3, col4 = st.columns(2)
     with col3:
         if st.button("START", key="start", use_container_width=True):
             try:
-                mode = st.session_state.input_mode
-                if mode == "Live (UX Play)":
-                    subprocess.Popen(["C:\\Path\\To\\uxplay.exe"])  # Adjust path
-                    subprocess.Popen([sys.executable, "model11.py", "live"])
-                else:
-                    subprocess.Popen([sys.executable, "model11.py", "test"])
-                st.success(f"✅ Detection started using {mode}!")
-            except FileNotFoundError as e:
+                uxplay_path = "/usr/local/bin/uxplay"  # Change if installed elsewhere
+                detection_script = "model11.py"         # Change if needed
+
+                # Start uxplay
+                uxplay_proc = subprocess.Popen([uxplay_path])
+                st.session_state.uxplay_proc = uxplay_proc
+
+                # Start detection script
+                detection_proc = subprocess.Popen([sys.executable, detection_script])
+                st.session_state.detection_proc = detection_proc
+
+                st.success("✅ UXPlay and detection started!")
+
+            except Exception as e:
                 st.error(f"❌ Failed to start: {e}")
 
         if st.button("EXIT", key="exit", use_container_width=True):
@@ -118,7 +89,17 @@ def control_panel():
 
     with col4:
         if st.button("STOP", key="stop", use_container_width=True):
-            st.warning("🛑 Manually close or press 'q' in the OpenCV window.")
+            try:
+                if st.session_state.detection_proc:
+                    st.session_state.detection_proc.terminate()
+                    st.session_state.detection_proc = None
+                if st.session_state.uxplay_proc:
+                    st.session_state.uxplay_proc.terminate()
+                    st.session_state.uxplay_proc = None
+                st.success("🛑 UXPlay and detection stopped.")
+            except Exception as e:
+                st.error(f"⚠️ Failed to stop: {e}")
+
         if st.button("RESULTS", key="results", use_container_width=True):
             st.session_state.page = 'results'
 
