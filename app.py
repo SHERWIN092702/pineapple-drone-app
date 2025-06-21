@@ -105,9 +105,8 @@ def control_panel():
             st.session_state.page = 'results'
 
 # === Results Page ===
-
 def results_page():
-    # Example values (replace these with real-time values later)
+    # Example data — replace with real detection values later
     ripe = 12
     unripe = 8
     overripe = 5
@@ -117,22 +116,28 @@ def results_page():
     unripe_pct = (unripe / total) * 100 if total > 0 else 0
     overripe_pct = (overripe / total) * 100 if total > 0 else 0
 
-    # === Header ===
-    st.markdown("<div class='overlay'><h2>DETECTION RESULTS</h2></div>", unsafe_allow_html=True)
+    # === Solid Gray Box Style ===
+    st.markdown("""
+        <div style="
+            background-color: #2f2f2f;
+            padding: 40px;
+            border-radius: 16px;
+            color: white;
+            margin: 40px auto;
+            max-width: 1000px;
+        ">
+            <h2 style="text-align: center;">DETECTION RESULTS</h2>
+    """, unsafe_allow_html=True)
 
-    # === Fake "Gray Box" using container + markdown style ===
-    st.markdown("""<div style="background-color: rgba(50, 50, 50, 0.85); padding: 30px; border-radius: 20px;">""", unsafe_allow_html=True)
-
-    # Columns inside the fake gray box
     col1, col2 = st.columns(2)
 
     with col1:
         st.markdown(f"""
-            <div style='padding: 20px;'>
-                <h3 style='color:white;'>🍍 Maturity Breakdown</h3>
-                <p style='font-size:18px; color:lime;'>✅ Ripe: {ripe_pct:.1f}%</p>
-                <p style='font-size:18px; color:orange;'>🟠 Unripe: {unripe_pct:.1f}%</p>
-                <p style='font-size:18px; color:red;'>🔴 Overripe: {overripe_pct:.1f}%</p>
+            <div style="padding: 10px;">
+                <h3>🍍 Maturity Breakdown</h3>
+                <p style="font-size: 18px; color: limegreen;">✅ Ripe: {ripe_pct:.1f}%</p>
+                <p style="font-size: 18px; color: orange;">🟠 Unripe: {unripe_pct:.1f}%</p>
+                <p style="font-size: 18px; color: crimson;">🔴 Overripe: {overripe_pct:.1f}%</p>
             </div>
         """, unsafe_allow_html=True)
 
@@ -149,14 +154,14 @@ def results_page():
             showlegend=True,
             paper_bgcolor='rgba(0,0,0,0)',
             font=dict(color='white'),
-            margin=dict(l=0, r=0, t=40, b=0)
+            margin=dict(l=0, r=0, t=30, b=0)
         )
         st.plotly_chart(fig, use_container_width=True)
 
-    # Close the gray box
+    # Close gray box
     st.markdown("</div>", unsafe_allow_html=True)
 
-    # Exit button centered below
+    # Exit button centered
     col_exit = st.columns([1, 2, 1])[1]
     with col_exit:
         if st.button("EXIT", key="exit_results", use_container_width=True):
