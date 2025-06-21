@@ -1,7 +1,9 @@
+# app.py
 import streamlit as st
 import subprocess
 import sys
-import plotly.graph_objects as go
+import model11_module
+import time
 
 # === Global CSS Background + Styling ===
 st.markdown("""
@@ -28,10 +30,8 @@ st.markdown("""
 # === Page State Initialization ===
 if 'page' not in st.session_state:
     st.session_state.page = 'home'
-if 'uxplay_proc' not in st.session_state:
-    st.session_state.uxplay_proc = None
-if 'detection_proc' not in st.session_state:
-    st.session_state.detection_proc = None
+if 'running' not in st.session_state:
+    st.session_state.running = False
 
 # === Home Page ===
 def home_page():
@@ -56,7 +56,7 @@ def about_page():
 
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        if st.button("▶️ START", key="start_from_about", use_container_width=True):
+        if st.button("🚀 START", key="start_from_about", use_container_width=True):
             st.session_state.page = 'control'
 
 # === Control Panel Page ===
@@ -66,42 +66,33 @@ def control_panel():
 
     col3, col4 = st.columns(2)
     with col3:
-        if st.button("▶️ START", key="start", use_container_width=True):
-            try:
-                uxplay_path = "/usr/local/bin/uxplay"
-                detection_script = "model11.py"
-
-                uxplay_proc = subprocess.Popen([uxplay_path])
-                st.session_state.uxplay_proc = uxplay_proc
-
-                detection_proc = subprocess.Popen([sys.executable, detection_script])
-                st.session_state.detection_proc = detection_proc
-
-                st.success("✅ UXPlay and detection started!")
-            except Exception as e:
-                st.error(f"❌ Failed to start: {e}")
-
-        if st.button("❌ EXIT", key="exit", use_container_width=True):
-            st.session_state.page = 'home'
+        if not st.session_state.running and st.button("📷 START DETECTION", key="start", use_container_width=True):
+            st.session_state.running = True
 
     with col4:
-        if st.button("⏹️ STOP", key="stop", use_container_width=True):
-            try:
-                if st.session_state.detection_proc:
-                    st.session_state.detection_proc.terminate()
-                    st.session_state.detection_proc = None
-                if st.session_state.uxplay_proc:
-                    st.session_state.uxplay_proc.terminate()
-                    st.session_state.uxplay_proc = None
-                st.success("🛑 UXPlay and detection stopped.")
-            except Exception as e:
-                st.error(f"⚠️ Failed to stop: {e}")
+        if st.button("🔴 STOP", key="stop", use_container_width=True):
+            st.session_state.running = False
 
+    frame_spot = st.empty()
+    if st.session_state.running:
+        for frame in model11_module.run_detection_yield_frames():
+            frame_spot.image(frame, channels="RGB")
+            if not st.session_state.running:
+                break
+            time.sleep(0.05)
+
+    col_exit, col_results = st.columns(2)
+    with col_exit:
+        if st.button("⬅️ EXIT", key="exit", use_container_width=True):
+            st.session_state.page = 'home'
+    with col_results:
         if st.button("📊 RESULTS", key="results", use_container_width=True):
             st.session_state.page = 'results'
 
 # === Results Page ===
 def results_page():
+    import plotly.graph_objects as go
+
     # Sample data
     ripe, unripe, overripe = 12, 8, 5
     total = ripe + unripe + overripe
@@ -144,7 +135,7 @@ def results_page():
 
     col = st.columns([1, 2, 1])[1]
     with col:
-        if st.button("❌ EXIT", key="exit_results", use_container_width=True):
+        if st.button("⬅️ BACK TO CONTROL", key="exit_results", use_container_width=True):
             st.session_state.page = 'control'
 
 # === Page Router ===
