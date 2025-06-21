@@ -1,9 +1,12 @@
 # app.py
+
 import streamlit as st
 import subprocess
 import sys
+import os
 import model11_module
 import time
+import plotly.graph_objects as go
 
 # === Global CSS Background + Styling ===
 st.markdown("""
@@ -67,12 +70,14 @@ def control_panel():
     col3, col4 = st.columns(2)
     with col3:
         if not st.session_state.running and st.button("📷 START DETECTION", key="start", use_container_width=True):
+            # Start uxplay if needed
+            subprocess.Popen(["uxplay"])
             st.session_state.running = True
 
     with col4:
-        if st.button("🔴 STOP", key="stop", use_container_width=True):
+        if st.session_state.running and st.button("🔴 STOP", key="stop", use_container_width=True):
             st.session_state.running = False
-            model11_module.stop_uxplay()
+            # Stop uxplay if desired (not guaranteed, requires pkill or user control)
 
     frame_spot = st.empty()
     if st.session_state.running:
@@ -85,21 +90,14 @@ def control_panel():
     col_exit, col_results = st.columns(2)
     with col_exit:
         if st.button("⬅️ EXIT", key="exit", use_container_width=True):
-            st.session_state.running = False
-            model11_module.stop_uxplay()
             st.session_state.page = 'home'
-
     with col_results:
         if st.button("📊 RESULTS", key="results", use_container_width=True):
-            st.session_state.running = False
-            model11_module.stop_uxplay()
             st.session_state.page = 'results'
 
 # === Results Page ===
 def results_page():
-    import plotly.graph_objects as go
-
-    # Sample data
+    # Example dummy results — replace with actual counts if needed
     ripe, unripe, overripe = 12, 8, 5
     total = ripe + unripe + overripe
     ripe_pct = (ripe / total) * 100 if total else 0
