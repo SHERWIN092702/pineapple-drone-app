@@ -38,7 +38,7 @@ def home_page():
     st.markdown("<div class='overlay'><h1>Drone Pineapple Maturity Detection</h1></div>", unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        if st.button("🔗 Connect", use_container_width=True):
+        if st.button("🔌 Connect", use_container_width=True):
             st.session_state.page = "about"
 
 # === About Page ===
@@ -56,7 +56,7 @@ def about_page():
 
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        if st.button("🟢 START", key="start_from_about", use_container_width=True):
+        if st.button("▶️ START", key="start_from_about", use_container_width=True):
             st.session_state.page = 'control'
 
 # === Control Panel Page ===
@@ -66,7 +66,7 @@ def control_panel():
 
     col3, col4 = st.columns(2)
     with col3:
-        if st.button("🟢 START", key="start", use_container_width=True):
+        if st.button("▶️ START", key="start", use_container_width=True):
             try:
                 uxplay_path = "/usr/local/bin/uxplay"
                 detection_script = "model11.py"
@@ -81,11 +81,11 @@ def control_panel():
             except Exception as e:
                 st.error(f"❌ Failed to start: {e}")
 
-        if st.button("🏠 EXIT", key="exit", use_container_width=True):
+        if st.button("❌ EXIT", key="exit", use_container_width=True):
             st.session_state.page = 'home'
 
     with col4:
-        if st.button("🛑 STOP", key="stop", use_container_width=True):
+        if st.button("⏹️ STOP", key="stop", use_container_width=True):
             try:
                 if st.session_state.detection_proc:
                     st.session_state.detection_proc.terminate()
@@ -144,7 +144,7 @@ def results_page():
 
     col = st.columns([1, 2, 1])[1]
     with col:
-        if st.button("⬅️ BACK", key="exit_results", use_container_width=True):
+        if st.button("❌ EXIT", key="exit_results", use_container_width=True):
             st.session_state.page = 'control'
 
 # === Page Router ===
