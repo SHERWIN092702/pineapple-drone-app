@@ -105,8 +105,6 @@ def control_panel():
             st.session_state.page = 'results'
 
 # === Results Page ===
-import streamlit as st
-import plotly.graph_objects as go
 
 def results_page():
     # Example values
@@ -119,30 +117,32 @@ def results_page():
     unripe_pct = (unripe / total) * 100 if total > 0 else 0
     overripe_pct = (overripe / total) * 100 if total > 0 else 0
 
-    st.markdown("""
-        <div style="
-            background-color: #2f2f2f;
-            padding: 40px;
-            border-radius: 16px;
-            color: white;
-            margin: 40px auto;
-            max-width: 1000px;
-        ">
-        <h2 style="text-align: center;">DETECTION RESULTS</h2>
-    """, unsafe_allow_html=True)
+    # Title
+    st.markdown("<div class='overlay'><h2>DETECTION RESULTS</h2></div>", unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
 
+    # Left side: results breakdown in a styled box
     with col1:
-        st.markdown(f"""
-            <div style="padding: 20px;">
+        st.markdown("""
+            <div style="
+                background-color: #2f2f2f;
+                padding: 30px;
+                border-radius: 12px;
+                color: white;
+                margin-top: 10px;
+            ">
                 <h3>🍍 Maturity Breakdown</h3>
-                <p style="font-size: 18px; color: limegreen;">✅ Ripe: {ripe_pct:.1f}%</p>
-                <p style="font-size: 18px; color: orange;">🟠 Unripe: {unripe_pct:.1f}%</p>
-                <p style="font-size: 18px; color: crimson;">🔴 Overripe: {overripe_pct:.1f}%</p>
+        """, unsafe_allow_html=True)
+
+        st.markdown(f"""
+            <p style="font-size: 18px; color: limegreen;">✅ Ripe: {ripe_pct:.1f}%</p>
+            <p style="font-size: 18px; color: orange;">🟠 Unripe: {unripe_pct:.1f}%</p>
+            <p style="font-size: 18px; color: crimson;">🔴 Overripe: {overripe_pct:.1f}%</p>
             </div>
         """, unsafe_allow_html=True)
 
+    # Right side: pie chart
     with col2:
         fig = go.Figure(data=[go.Pie(
             labels=['Ripe', 'Unripe', 'Overripe'],
@@ -160,9 +160,7 @@ def results_page():
         )
         st.plotly_chart(fig, use_container_width=True)
 
-    st.markdown("</div>", unsafe_allow_html=True)
-
-    # Exit Button Centered
+    # Exit button
     col_exit = st.columns([1, 2, 1])[1]
     with col_exit:
         if st.button("EXIT", key="exit_results", use_container_width=True):
