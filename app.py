@@ -105,10 +105,9 @@ def control_panel():
             st.session_state.page = 'results'
 
 # === Results Page ===
-import plotly.graph_objects as go
 
 def results_page():
-    # Dummy data – replace these with real detection results if available
+    # Example data (you can replace this later with real detection values)
     ripe = 12
     unripe = 8
     overripe = 5
@@ -118,37 +117,45 @@ def results_page():
     unripe_pct = (unripe / total) * 100 if total > 0 else 0
     overripe_pct = (overripe / total) * 100 if total > 0 else 0
 
-    # Layout in two columns
-    col1, col2 = st.columns(2)
+    st.markdown("<div class='overlay'><h2>DETECTION RESULTS</h2></div>", unsafe_allow_html=True)
+    col1, col2 = st.columns([1, 1])
 
-    # === Left Side: Percentages ===
+    # === Left: Percentages Panel ===
     with col1:
-        st.markdown("<div class='overlay'><h2>RESULT SUMMARY</h2></div>", unsafe_allow_html=True)
-        st.markdown(f"<p style='color:white; font-size:20px;'>🍍 <b>Ripe:</b> {ripe_pct:.1f}%</p>", unsafe_allow_html=True)
-        st.markdown(f"<p style='color:white; font-size:20px;'>🍍 <b>Unripe:</b> {unripe_pct:.1f}%</p>", unsafe_allow_html=True)
-        st.markdown(f"<p style='color:white; font-size:20px;'>🍍 <b>Overripe:</b> {overripe_pct:.1f}%</p>", unsafe_allow_html=True)
+        st.markdown("""
+            <div class='overlay'>
+                <h3 style='color:white;'>🍍 Maturity Levels</h3>
+                <p style='font-size:18px; color:lime;'>✅ Ripe: {:.1f}%</p>
+                <p style='font-size:18px; color:orange;'>🟠 Unripe: {:.1f}%</p>
+                <p style='font-size:18px; color:red;'>🔴 Overripe: {:.1f}%</p>
+            </div>
+        """.format(ripe_pct, unripe_pct, overripe_pct), unsafe_allow_html=True)
 
-    # === Right Side: Pie Chart ===
+    # === Right: Pie Chart ===
     with col2:
         fig = go.Figure(data=[go.Pie(
             labels=['Ripe', 'Unripe', 'Overripe'],
             values=[ripe, unripe, overripe],
-            marker=dict(colors=['green', 'orange', 'red']),
-            hole=0.3,  # for donut style
-            textinfo='label+percent'
+            marker=dict(colors=['limegreen', 'orange', 'crimson']),
+            hole=0.3,
+            textinfo='label+percent',
+            insidetextorientation='radial'
         )])
         fig.update_layout(
-            title_text='Pineapple Maturity Distribution',
+            title='Maturity Distribution',
+            showlegend=True,
             paper_bgcolor='rgba(0,0,0,0)',
-            font=dict(color='white')
+            font=dict(color='white'),
+            margin=dict(l=0, r=0, t=40, b=0)
         )
         st.plotly_chart(fig, use_container_width=True)
 
-    # === Exit Button ===
+    # === Exit Button Centered ===
     col_exit = st.columns([1, 2, 1])[1]
     with col_exit:
         if st.button("EXIT", key="exit_results", use_container_width=True):
             st.session_state.page = 'control'
+
 
 # === Page Router ===
 if st.session_state.page == 'home':
