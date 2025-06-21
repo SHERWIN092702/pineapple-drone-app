@@ -120,7 +120,7 @@ def results_page():
 
     st.markdown("<div class='overlay'><h2>DETECTION RESULTS</h2></div>", unsafe_allow_html=True)
 
-    # Style for gray container
+    # Style for gray container and layout
     st.markdown("""
         <style>
         .results-wrapper {
@@ -129,20 +129,23 @@ def results_page():
             border-radius: 15px;
             margin: 30px auto;
             max-width: 900px;
+            color: white;
         }
-        .results-column {
+        .results-flex {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         .left-text {
             flex: 1;
-            color: white;
             padding-right: 40px;
+        }
+        .left-text h3 {
+            margin-bottom: 20px;
         }
         .left-text p {
             font-size: 20px;
-            margin: 10px 0;
+            margin: 12px 0;
         }
         .chart-container {
             flex: 1;
@@ -151,11 +154,11 @@ def results_page():
         </style>
     """, unsafe_allow_html=True)
 
-    # Display results in styled container
+    # Display the gray results section
     st.markdown('<div class="results-wrapper">', unsafe_allow_html=True)
-    st.markdown('<div class="results-column">', unsafe_allow_html=True)
+    st.markdown('<div class="results-flex">', unsafe_allow_html=True)
 
-    # Left text content
+    # Left column with percentages
     st.markdown(f"""
         <div class="left-text">
             <h3>🍍 Maturity Breakdown</h3>
@@ -165,7 +168,7 @@ def results_page():
         </div>
     """, unsafe_allow_html=True)
 
-    # Right chart content
+    # Right column with pie chart
     fig = go.Figure(data=[go.Pie(
         labels=['Ripe', 'Unripe', 'Overripe'],
         values=[ripe, unripe, overripe],
@@ -186,22 +189,14 @@ def results_page():
     st.plotly_chart(fig, use_container_width=False)
     st.markdown('</div>', unsafe_allow_html=True)
 
-    st.markdown('</div>', unsafe_allow_html=True)  # Close results-column
-    st.markdown('</div>', unsafe_allow_html=True)  # Close results-wrapper
+    st.markdown('</div>', unsafe_allow_html=True)  # Close flex
+    st.markdown('</div>', unsafe_allow_html=True)  # Close wrapper
 
-    # Exit Button
+    # Exit button (only once!)
     col = st.columns([1, 2, 1])[1]
     with col:
         if st.button("EXIT", key="exit_results", use_container_width=True):
             st.session_state.page = 'control'
-
-
-    # Exit Button
-    col = st.columns([1, 2, 1])[1]
-    with col:
-        if st.button("EXIT", key="exit_results", use_container_width=True):
-            st.session_state.page = 'control'
-
 
 
 # === Page Router ===
