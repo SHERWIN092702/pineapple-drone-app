@@ -106,7 +106,7 @@ def control_panel():
 
 # === Results Page ===
 def results_page():
-    # Example data — replace with real detection values later
+    # Example values
     ripe = 12
     unripe = 8
     overripe = 5
@@ -116,7 +116,7 @@ def results_page():
     unripe_pct = (unripe / total) * 100 if total > 0 else 0
     overripe_pct = (overripe / total) * 100 if total > 0 else 0
 
-    # === Solid Gray Box Style ===
+    # Start of full gray rectangle
     st.markdown("""
         <div style="
             background-color: #2f2f2f;
@@ -126,9 +126,12 @@ def results_page():
             margin: 40px auto;
             max-width: 1000px;
         ">
-            <h2 style="text-align: center;">DETECTION RESULTS</h2>
     """, unsafe_allow_html=True)
 
+    # Title inside the gray box
+    st.markdown("<h2 style='text-align: center;'>DETECTION RESULTS</h2>", unsafe_allow_html=True)
+
+    # Columns inside the same gray div
     col1, col2 = st.columns(2)
 
     with col1:
@@ -158,10 +161,10 @@ def results_page():
         )
         st.plotly_chart(fig, use_container_width=True)
 
-    # Close gray box
+    # Close the big gray box
     st.markdown("</div>", unsafe_allow_html=True)
 
-    # Exit button centered
+    # Exit button below
     col_exit = st.columns([1, 2, 1])[1]
     with col_exit:
         if st.button("EXIT", key="exit_results", use_container_width=True):
