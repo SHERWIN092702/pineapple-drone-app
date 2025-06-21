@@ -32,8 +32,6 @@ if 'page' not in st.session_state:
     st.session_state.page = 'home'
 if 'running' not in st.session_state:
     st.session_state.running = False
-if 'uxplay_process' not in st.session_state:
-    st.session_state.uxplay_process = None
 
 # === Home Page ===
 def home_page():
@@ -69,18 +67,12 @@ def control_panel():
     col3, col4 = st.columns(2)
     with col3:
         if not st.session_state.running and st.button("📷 START DETECTION", key="start", use_container_width=True):
-            try:
-                st.session_state.uxplay_process = subprocess.Popen(["/usr/local/bin/uxplay"])
-            except Exception as e:
-                st.warning(f"Failed to launch UXPlay: {e}")
             st.session_state.running = True
 
     with col4:
         if st.button("🔴 STOP", key="stop", use_container_width=True):
             st.session_state.running = False
-            if st.session_state.uxplay_process:
-                st.session_state.uxplay_process.terminate()
-                st.session_state.uxplay_process = None
+            model11_module.stop_uxplay()
 
     frame_spot = st.empty()
     if st.session_state.running:
@@ -93,9 +85,14 @@ def control_panel():
     col_exit, col_results = st.columns(2)
     with col_exit:
         if st.button("⬅️ EXIT", key="exit", use_container_width=True):
+            st.session_state.running = False
+            model11_module.stop_uxplay()
             st.session_state.page = 'home'
+
     with col_results:
         if st.button("📊 RESULTS", key="results", use_container_width=True):
+            st.session_state.running = False
+            model11_module.stop_uxplay()
             st.session_state.page = 'results'
 
 # === Results Page ===
