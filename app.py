@@ -108,45 +108,33 @@ def control_panel():
 def results_page():
     import plotly.graph_objects as go
 
-    # Sample data (replace with real values later)
-    ripe = 12
-    unripe = 8
-    overripe = 5
+    # Sample data
+    ripe, unripe, overripe = 12, 8, 5
     total = ripe + unripe + overripe
+    ripe_pct = (ripe / total) * 100 if total else 0
+    unripe_pct = (unripe / total) * 100 if total else 0
+    overripe_pct = (overripe / total) * 100 if total else 0
 
-    ripe_pct = (ripe / total) * 100 if total > 0 else 0
-    unripe_pct = (unripe / total) * 100 if total > 0 else 0
-    overripe_pct = (overripe / total) * 100 if total > 0 else 0
-
-    # Heading
+    # Title
     st.markdown("<div class='overlay'><h2>DETECTION RESULTS</h2></div>", unsafe_allow_html=True)
 
-    # Gray background style using a container
-    st.markdown("""
-        <style>
-        .gray-container {
-            background-color: #2e2e2e;
-            padding: 30px;
-            border-radius: 15px;
-            margin-top: 20px;
-            margin-bottom: 20px;
-            color: white;
-        }
-        </style>
-    """, unsafe_allow_html=True)
-
-    # Container wrapper for gray background
+    # Gray box with columns inside
     with st.container():
-        st.markdown('<div class="gray-container">', unsafe_allow_html=True)
+        st.markdown("""
+            <div style='background-color: #2e2e2e; padding: 30px; border-radius: 15px;'>
+        """, unsafe_allow_html=True)
 
-        # Use Streamlit columns for proper side-by-side layout
-        col1, col2 = st.columns([1, 1])
+        col1, col2 = st.columns([1, 1])  # Equal width
 
         with col1:
-            st.markdown("### 🍍 Maturity Breakdown")
-            st.markdown(f"✅ **Ripe:** <span style='color:limegreen;'>{ripe_pct:.1f}%</span>", unsafe_allow_html=True)
-            st.markdown(f"🟠 **Unripe:** <span style='color:orange;'>{unripe_pct:.1f}%</span>", unsafe_allow_html=True)
-            st.markdown(f"🔴 **Overripe:** <span style='color:crimson;'>{overripe_pct:.1f}%</span>", unsafe_allow_html=True)
+            st.markdown(f"""
+                <div style='color: white; padding: 10px 20px;'>
+                    <h3>🍍 Maturity Breakdown</h3>
+                    <p>✅ <span style="color:limegreen;">Ripe:</span> {ripe_pct:.1f}%</p>
+                    <p>🟠 <span style="color:orange;">Unripe:</span> {unripe_pct:.1f}%</p>
+                    <p>🔴 <span style="color:crimson;">Overripe:</span> {overripe_pct:.1f}%</p>
+                </div>
+            """, unsafe_allow_html=True)
 
         with col2:
             fig = go.Figure(data=[go.Pie(
@@ -166,9 +154,9 @@ def results_page():
             )
             st.plotly_chart(fig, use_container_width=False)
 
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)  # Close gray box
 
-    # Exit Button
+    # Exit button
     col = st.columns([1, 2, 1])[1]
     with col:
         if st.button("EXIT", key="exit_results", use_container_width=True):
