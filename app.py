@@ -106,6 +106,7 @@ def control_panel():
 
 # === Results Page ===
 
+
 def results_page():
     # Dummy values for testing
     ripe = 12
@@ -117,63 +118,56 @@ def results_page():
     unripe_pct = (unripe / total) * 100 if total > 0 else 0
     overripe_pct = (overripe / total) * 100 if total > 0 else 0
 
-    # === Header ===
+    # === Title Overlay ===
     st.markdown("<div class='overlay'><h2>DETECTION RESULTS</h2></div>", unsafe_allow_html=True)
 
-    # === Start Gray Container ===
-    st.markdown("""
-        <style>
-            .results-container {
-                background-color: rgba(50, 50, 50, 0.85);
-                padding: 30px;
-                border-radius: 16px;
-                margin: 30px auto;
-                max-width: 1000px;
-            }
-        </style>
-        <div class="results-container">
-    """, unsafe_allow_html=True)
-
-    # === Columns Inside Gray Box ===
-    col1, col2 = st.columns(2)
-
-    with col1:
+    # === Real Contained Section ===
+    with st.container():
+        # Use a gray background block styled by HTML inside the container
         st.markdown("""
-            <div style='padding: 10px;'>
+            <div style="background-color: rgba(50, 50, 50, 0.85);
+                        padding: 30px;
+                        border-radius: 16px;
+                        margin: 20px 0px;">
+        """, unsafe_allow_html=True)
+
+        # Columns MUST be inside container (after opening div)
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.markdown(f"""
                 <h3 style='color:white;'>🍍 Maturity Levels</h3>
-                <p style='font-size:18px; color:lime;'>✅ Ripe: {:.1f}%</p>
-                <p style='font-size:18px; color:orange;'>🟠 Unripe: {:.1f}%</p>
-                <p style='font-size:18px; color:red;'>🔴 Overripe: {:.1f}%</p>
-            </div>
-        """.format(ripe_pct, unripe_pct, overripe_pct), unsafe_allow_html=True)
+                <p style='font-size:18px; color:lime;'>✅ Ripe: {ripe_pct:.1f}%</p>
+                <p style='font-size:18px; color:orange;'>🟠 Unripe: {unripe_pct:.1f}%</p>
+                <p style='font-size:18px; color:red;'>🔴 Overripe: {overripe_pct:.1f}%</p>
+            """, unsafe_allow_html=True)
 
-    with col2:
-        fig = go.Figure(data=[go.Pie(
-            labels=['Ripe', 'Unripe', 'Overripe'],
-            values=[ripe, unripe, overripe],
-            marker=dict(colors=['limegreen', 'orange', 'crimson']),
-            hole=0.3,
-            textinfo='label+percent',
-            insidetextorientation='radial'
-        )])
-        fig.update_layout(
-            title='Maturity Distribution',
-            showlegend=True,
-            paper_bgcolor='rgba(0,0,0,0)',
-            font=dict(color='white'),
-            margin=dict(l=0, r=0, t=40, b=0)
-        )
-        st.plotly_chart(fig, use_container_width=True)
+        with col2:
+            fig = go.Figure(data=[go.Pie(
+                labels=['Ripe', 'Unripe', 'Overripe'],
+                values=[ripe, unripe, overripe],
+                marker=dict(colors=['limegreen', 'orange', 'crimson']),
+                hole=0.3,
+                textinfo='label+percent',
+                insidetextorientation='radial'
+            )])
+            fig.update_layout(
+                title='Maturity Distribution',
+                showlegend=True,
+                paper_bgcolor='rgba(0,0,0,0)',
+                font=dict(color='white'),
+                margin=dict(l=0, r=0, t=40, b=0)
+            )
+            st.plotly_chart(fig, use_container_width=True)
 
-    # === Close Gray Container ===
-    st.markdown("</div>", unsafe_allow_html=True)
+        # Close the gray div
+        st.markdown("</div>", unsafe_allow_html=True)
 
-    # === Centered EXIT Button ===
+    # Exit button
     col_exit = st.columns([1, 2, 1])[1]
     with col_exit:
         if st.button("EXIT", key="exit_results", use_container_width=True):
             st.session_state.page = 'control'
-
 
 
 # === Page Router ===
