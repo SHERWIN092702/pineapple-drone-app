@@ -38,7 +38,7 @@ def home_page():
     st.markdown("<div class='overlay'><h1>Drone Pineapple Maturity Detection</h1></div>", unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        if st.button("Connect", use_container_width=True):
+        if st.button("🔗 Connect", use_container_width=True):
             st.session_state.page = "about"
 
 # === About Page ===
@@ -56,40 +56,36 @@ def about_page():
 
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        if st.button("START", key="start_from_about", use_container_width=True):
+        if st.button("🟢 START", key="start_from_about", use_container_width=True):
             st.session_state.page = 'control'
 
 # === Control Panel Page ===
 def control_panel():
     st.markdown("<div class='overlay'><h2>CONTROL PANEL</h2></div>", unsafe_allow_html=True)
-
     st.markdown("<br><br>", unsafe_allow_html=True)
 
     col3, col4 = st.columns(2)
     with col3:
-        if st.button("START", key="start", use_container_width=True):
+        if st.button("🟢 START", key="start", use_container_width=True):
             try:
-                uxplay_path = "/usr/local/bin/uxplay"  # Change if installed elsewhere
-                detection_script = "model11.py"         # Change if needed
+                uxplay_path = "/usr/local/bin/uxplay"
+                detection_script = "model11.py"
 
-                # Start uxplay
                 uxplay_proc = subprocess.Popen([uxplay_path])
                 st.session_state.uxplay_proc = uxplay_proc
 
-                # Start detection script
                 detection_proc = subprocess.Popen([sys.executable, detection_script])
                 st.session_state.detection_proc = detection_proc
 
                 st.success("✅ UXPlay and detection started!")
-
             except Exception as e:
                 st.error(f"❌ Failed to start: {e}")
 
-        if st.button("EXIT", key="exit", use_container_width=True):
+        if st.button("🏠 EXIT", key="exit", use_container_width=True):
             st.session_state.page = 'home'
 
     with col4:
-        if st.button("STOP", key="stop", use_container_width=True):
+        if st.button("🛑 STOP", key="stop", use_container_width=True):
             try:
                 if st.session_state.detection_proc:
                     st.session_state.detection_proc.terminate()
@@ -101,13 +97,11 @@ def control_panel():
             except Exception as e:
                 st.error(f"⚠️ Failed to stop: {e}")
 
-        if st.button("RESULTS", key="results", use_container_width=True):
+        if st.button("📊 RESULTS", key="results", use_container_width=True):
             st.session_state.page = 'results'
 
 # === Results Page ===
 def results_page():
-    import plotly.graph_objects as go
-
     # Sample data
     ripe, unripe, overripe = 12, 8, 5
     total = ripe + unripe + overripe
@@ -115,12 +109,10 @@ def results_page():
     unripe_pct = (unripe / total) * 100 if total else 0
     overripe_pct = (overripe / total) * 100 if total else 0
 
-    # Title
     st.markdown("<div class='overlay'><h2>DETECTION RESULTS</h2></div>", unsafe_allow_html=True)
 
-    # === Adjust this value to control spacing ===
-    gap_ratio = 0.3  # Increase for more space between left and right
-    col1, col_gap, col2 = st.columns([1, gap_ratio, 1])  # left, gap, right
+    gap_ratio = 0.3
+    col1, col_gap, col2 = st.columns([1, gap_ratio, 1])
 
     with col1:
         st.markdown(f"""
@@ -150,12 +142,10 @@ def results_page():
         )
         st.plotly_chart(fig, use_container_width=False)
 
-    # Exit Button
     col = st.columns([1, 2, 1])[1]
     with col:
-        if st.button("EXIT", key="exit_results", use_container_width=True):
+        if st.button("⬅️ BACK", key="exit_results", use_container_width=True):
             st.session_state.page = 'control'
-
 
 # === Page Router ===
 if st.session_state.page == 'home':
