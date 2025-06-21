@@ -105,11 +105,7 @@ def control_panel():
             st.session_state.page = 'results'
 
 # === Results Page ===
-import streamlit as st
-import plotly.graph_objects as go
-
 def results_page():
-    # Example values
     ripe = 12
     unripe = 8
     overripe = 5
@@ -119,61 +115,53 @@ def results_page():
     unripe_pct = (unripe / total) * 100 if total > 0 else 0
     overripe_pct = (overripe / total) * 100 if total > 0 else 0
 
-    # Title
+    # Header
     st.markdown("<div class='overlay'><h2>DETECTION RESULTS</h2></div>", unsafe_allow_html=True)
 
-    # Flex container for layout
+    # Wrap entire section in a full-width gray box
     st.markdown(f"""
         <div style="
-            display: flex;
-            justify-content: center;
-            gap: 60px;
-            margin-top: 30px;
-            flex-wrap: wrap;
+            background-color: #2e2e2e;
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 1000px;
+            margin: 30px auto;
         ">
-            <div style="
-                background-color: #2f2f2f;
-                padding: 30px;
-                border-radius: 12px;
-                color: white;
-                width: 300px;
-            ">
-                <h3 style="margin-bottom: 25px;">🍍 Maturity Breakdown</h3>
-                <p style="font-size: 18px; color: limegreen; margin-bottom: 18px;">✅ Ripe: {ripe_pct:.1f}%</p>
-                <p style="font-size: 18px; color: orange; margin-bottom: 18px;">🟠 Unripe: {unripe_pct:.1f}%</p>
-                <p style="font-size: 18px; color: crimson; margin-bottom: 5px;">🔴 Overripe: {overripe_pct:.1f}%</p>
-            </div>
-
-            <div style="width: 350px;">
-                <!-- Placeholder for graph -->
-                <div id="plotly-container"></div>
+            <div style="display: flex; justify-content: space-between; gap: 50px; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 250px; color: white;">
+                    <h3>🍍 Maturity Breakdown</h3>
+                    <p style="font-size: 18px; color: limegreen;">✅ Ripe: {ripe_pct:.1f}%</p>
+                    <p style="font-size: 18px; color: orange;">🟠 Unripe: {unripe_pct:.1f}%</p>
+                    <p style="font-size: 18px; color: crimson;">🔴 Overripe: {overripe_pct:.1f}%</p>
+                </div>
+                <div style="flex: 1; min-width: 300px;">
+                    <!-- Plotly chart appears just below in Streamlit -->
+                </div>
             </div>
         </div>
     """, unsafe_allow_html=True)
 
-    # Pie chart (rendered in the placeholder)
+    # Plotly chart shown separately but aligned visually
     fig = go.Figure(data=[go.Pie(
         labels=['Ripe', 'Unripe', 'Overripe'],
         values=[ripe, unripe, overripe],
         marker=dict(colors=['limegreen', 'orange', 'crimson']),
         hole=0.3,
-        textinfo='label+percent',
-        insidetextorientation='radial'
+        textinfo='label+percent'
     )])
     fig.update_layout(
         showlegend=True,
         paper_bgcolor='rgba(0,0,0,0)',
         font=dict(color='white'),
-        margin=dict(l=0, r=0, t=30, b=0)
+        margin=dict(l=0, r=0, t=30, b=0),
     )
     st.plotly_chart(fig, use_container_width=False)
 
-    # Exit button centered
-    col_exit = st.columns([1, 2, 1])[1]
-    with col_exit:
+    # Exit Button
+    col = st.columns([1, 2, 1])[1]
+    with col:
         if st.button("EXIT", key="exit_results", use_container_width=True):
             st.session_state.page = 'control'
-
 
 
 # === Page Router ===
