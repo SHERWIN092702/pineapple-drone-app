@@ -119,7 +119,7 @@ def results_page():
     st.markdown("<div class='overlay'><h2>DETECTION RESULTS</h2></div>", unsafe_allow_html=True)
 
     # === Adjust this value to control spacing ===
-    gap_ratio = 1.0  # Increase for more space between left and right
+    gap_ratio = 0.7  # Increase for more space between left and right
     col1, col_gap, col2 = st.columns([1, gap_ratio, 1])  # left, gap, right
 
     with col1:
