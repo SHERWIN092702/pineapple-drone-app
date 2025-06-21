@@ -118,86 +118,61 @@ def results_page():
     unripe_pct = (unripe / total) * 100 if total > 0 else 0
     overripe_pct = (overripe / total) * 100 if total > 0 else 0
 
+    # Heading
     st.markdown("<div class='overlay'><h2>DETECTION RESULTS</h2></div>", unsafe_allow_html=True)
 
-    # Style for gray container and layout
+    # Gray background style using a container
     st.markdown("""
         <style>
-        .results-wrapper {
+        .gray-container {
             background-color: #2e2e2e;
-            padding: 40px;
+            padding: 30px;
             border-radius: 15px;
-            margin: 30px auto;
-            max-width: 900px;
-            color: white;
-        }
-        .results-flex {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .left-text {
-            flex: 1;
-            padding-right: 40px;
-        }
-        .left-text h3 {
+            margin-top: 20px;
             margin-bottom: 20px;
-        }
-        .left-text p {
-            font-size: 20px;
-            margin: 12px 0;
-        }
-        .chart-container {
-            flex: 1;
-            max-width: 350px;
+            color: white;
         }
         </style>
     """, unsafe_allow_html=True)
 
-    # Display the gray results section
-    st.markdown('<div class="results-wrapper">', unsafe_allow_html=True)
-    st.markdown('<div class="results-flex">', unsafe_allow_html=True)
+    # Container wrapper for gray background
+    with st.container():
+        st.markdown('<div class="gray-container">', unsafe_allow_html=True)
 
-    # Left column with percentages
-    st.markdown(f"""
-        <div class="left-text">
-            <h3>🍍 Maturity Breakdown</h3>
-            <p>✅ <span style="color:limegreen;">Ripe:</span> {ripe_pct:.1f}%</p>
-            <p>🟠 <span style="color:orange;">Unripe:</span> {unripe_pct:.1f}%</p>
-            <p>🔴 <span style="color:crimson;">Overripe:</span> {overripe_pct:.1f}%</p>
-        </div>
-    """, unsafe_allow_html=True)
+        # Use Streamlit columns for proper side-by-side layout
+        col1, col2 = st.columns([1, 1])
 
-    # Right column with pie chart
-    fig = go.Figure(data=[go.Pie(
-        labels=['Ripe', 'Unripe', 'Overripe'],
-        values=[ripe, unripe, overripe],
-        marker=dict(colors=['limegreen', 'orange', 'crimson']),
-        hole=0.3,
-        textinfo='label+percent'
-    )])
-    fig.update_layout(
-        showlegend=False,
-        paper_bgcolor='rgba(0,0,0,0)',
-        font=dict(color='white'),
-        margin=dict(l=0, r=0, t=0, b=0),
-        height=300,
-        width=300,
-    )
+        with col1:
+            st.markdown("### 🍍 Maturity Breakdown")
+            st.markdown(f"✅ **Ripe:** <span style='color:limegreen;'>{ripe_pct:.1f}%</span>", unsafe_allow_html=True)
+            st.markdown(f"🟠 **Unripe:** <span style='color:orange;'>{unripe_pct:.1f}%</span>", unsafe_allow_html=True)
+            st.markdown(f"🔴 **Overripe:** <span style='color:crimson;'>{overripe_pct:.1f}%</span>", unsafe_allow_html=True)
 
-    st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-    st.plotly_chart(fig, use_container_width=False)
-    st.markdown('</div>', unsafe_allow_html=True)
+        with col2:
+            fig = go.Figure(data=[go.Pie(
+                labels=['Ripe', 'Unripe', 'Overripe'],
+                values=[ripe, unripe, overripe],
+                marker=dict(colors=['limegreen', 'orange', 'crimson']),
+                hole=0.3,
+                textinfo='label+percent'
+            )])
+            fig.update_layout(
+                showlegend=False,
+                paper_bgcolor='rgba(0,0,0,0)',
+                font=dict(color='white'),
+                margin=dict(l=0, r=0, t=0, b=0),
+                height=300,
+                width=300,
+            )
+            st.plotly_chart(fig, use_container_width=False)
 
-    st.markdown('</div>', unsafe_allow_html=True)  # Close flex
-    st.markdown('</div>', unsafe_allow_html=True)  # Close wrapper
+        st.markdown('</div>', unsafe_allow_html=True)
 
-    # Exit button (only once!)
+    # Exit Button
     col = st.columns([1, 2, 1])[1]
     with col:
         if st.button("EXIT", key="exit_results", use_container_width=True):
             st.session_state.page = 'control'
-
 
 # === Page Router ===
 if st.session_state.page == 'home':
