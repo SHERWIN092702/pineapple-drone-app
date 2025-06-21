@@ -126,9 +126,9 @@ def results_page():
         st.markdown(f"""
             <div style='background-color: #2e2e2e; padding: 20px 30px; border-radius: 12px; color: white;'>
                 <h3>🍍 Maturity Breakdown</h3>
-                <p>✅ <span style="color:limegreen;">Ripe:</span> {ripe_pct:.1f}%</p>
-                <p>🟠 <span style="color:orange;">Unripe:</span> {unripe_pct:.1f}%</p>
-                <p>🔴 <span style="color:crimson;">Overripe:</span> {overripe_pct:.1f}%</p>
+                <p><span style="color:limegreen;">🟢 Ripe:</span> {ripe_pct:.1f}%</p>
+                <p><span style="color:orange;">🟠 Unripe:</span> {unripe_pct:.1f}%</p>
+                <p><span style="color:crimson;">🔴 Overripe:</span> {overripe_pct:.1f}%</p>
             </div>
         """, unsafe_allow_html=True)
 
