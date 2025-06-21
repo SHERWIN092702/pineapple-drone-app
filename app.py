@@ -122,43 +122,51 @@ def results_page():
     # Title
     st.markdown("<div class='overlay'><h2>DETECTION RESULTS</h2></div>", unsafe_allow_html=True)
 
-    # Create columns with space in between
-    col1, spacer, col2 = st.columns([1, 0.2, 1])
-
-    # Left: Text inside gray box
-    with col1:
-        st.markdown(f"""
+    # Flex container for layout
+    st.markdown(f"""
+        <div style="
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        ">
             <div style="
                 background-color: #2f2f2f;
                 padding: 30px;
                 border-radius: 12px;
                 color: white;
-                margin-top: 10px;
+                width: 300px;
             ">
                 <h3 style="margin-bottom: 25px;">🍍 Maturity Breakdown</h3>
                 <p style="font-size: 18px; color: limegreen; margin-bottom: 18px;">✅ Ripe: {ripe_pct:.1f}%</p>
                 <p style="font-size: 18px; color: orange; margin-bottom: 18px;">🟠 Unripe: {unripe_pct:.1f}%</p>
                 <p style="font-size: 18px; color: crimson; margin-bottom: 5px;">🔴 Overripe: {overripe_pct:.1f}%</p>
             </div>
-        """, unsafe_allow_html=True)
 
-    # Right: Pie chart
-    with col2:
-        fig = go.Figure(data=[go.Pie(
-            labels=['Ripe', 'Unripe', 'Overripe'],
-            values=[ripe, unripe, overripe],
-            marker=dict(colors=['limegreen', 'orange', 'crimson']),
-            hole=0.3,
-            textinfo='label+percent',
-            insidetextorientation='radial'
-        )])
-        fig.update_layout(
-            showlegend=True,
-            paper_bgcolor='rgba(0,0,0,0)',
-            font=dict(color='white'),
-            margin=dict(l=0, r=0, t=30, b=0)
-        )
-        st.plotly_chart(fig, use_container_width=True)
+            <div style="width: 350px;">
+                <!-- Placeholder for graph -->
+                <div id="plotly-container"></div>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # Pie chart (rendered in the placeholder)
+    fig = go.Figure(data=[go.Pie(
+        labels=['Ripe', 'Unripe', 'Overripe'],
+        values=[ripe, unripe, overripe],
+        marker=dict(colors=['limegreen', 'orange', 'crimson']),
+        hole=0.3,
+        textinfo='label+percent',
+        insidetextorientation='radial'
+    )])
+    fig.update_layout(
+        showlegend=True,
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='white'),
+        margin=dict(l=0, r=0, t=30, b=0)
+    )
+    st.plotly_chart(fig, use_container_width=False)
 
     # Exit button centered
     col_exit = st.columns([1, 2, 1])[1]
