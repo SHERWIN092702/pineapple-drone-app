@@ -118,17 +118,19 @@ def results_page():
     # Title
     st.markdown("<div class='overlay'><h2>DETECTION RESULTS</h2></div>", unsafe_allow_html=True)
 
-    col1, col2 = st.columns([1, 1])  # Text on left, chart on right
+    # === Adjust this value to control spacing ===
+    gap_ratio = 2.0  # Increase for more space between left and right
+    col1, col_gap, col2 = st.columns([1, gap_ratio, 1])  # left, gap, right
 
     with col1:
-        st.markdown("""
+        st.markdown(f"""
             <div style='background-color: #2e2e2e; padding: 20px 30px; border-radius: 12px; color: white;'>
                 <h3>🍍 Maturity Breakdown</h3>
-                <p>✅ <span style="color:limegreen;">Ripe:</span> {:.1f}%</p>
-                <p>🟠 <span style="color:orange;">Unripe:</span> {:.1f}%</p>
-                <p>🔴 <span style="color:crimson;">Overripe:</span> {:.1f}%</p>
+                <p>✅ <span style="color:limegreen;">Ripe:</span> {ripe_pct:.1f}%</p>
+                <p>🟠 <span style="color:orange;">Unripe:</span> {unripe_pct:.1f}%</p>
+                <p>🔴 <span style="color:crimson;">Overripe:</span> {overripe_pct:.1f}%</p>
             </div>
-        """.format(ripe_pct, unripe_pct, overripe_pct), unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
 
     with col2:
         fig = go.Figure(data=[go.Pie(
