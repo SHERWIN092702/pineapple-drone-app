@@ -107,7 +107,7 @@ def control_panel():
 # === Results Page ===
 
 def results_page():
-    # Example data (you can replace this later with real detection values)
+    # Dummy data (you can replace this later with real detection values)
     ripe = 12
     unripe = 8
     overripe = 5
@@ -117,13 +117,32 @@ def results_page():
     unripe_pct = (unripe / total) * 100 if total > 0 else 0
     overripe_pct = (overripe / total) * 100 if total > 0 else 0
 
+    # === Title ===
     st.markdown("<div class='overlay'><h2>DETECTION RESULTS</h2></div>", unsafe_allow_html=True)
-    col1, col2 = st.columns([1, 1])
 
-    # === Left: Percentages Panel ===
+    # === Container ===
+    st.markdown("""
+        <style>
+            .results-container {
+                background-color: rgba(50, 50, 50, 0.85);
+                padding: 30px;
+                border-radius: 16px;
+                margin: 30px auto;
+                max-width: 1000px;
+            }
+            .left-box, .right-box {
+                padding: 20px;
+            }
+        </style>
+        <div class='results-container'>
+    """, unsafe_allow_html=True)
+
+    col1, col2 = st.columns(2)
+
+    # === Left Side: Percentages ===
     with col1:
         st.markdown("""
-            <div class='overlay'>
+            <div class='left-box'>
                 <h3 style='color:white;'>🍍 Maturity Levels</h3>
                 <p style='font-size:18px; color:lime;'>✅ Ripe: {:.1f}%</p>
                 <p style='font-size:18px; color:orange;'>🟠 Unripe: {:.1f}%</p>
@@ -131,7 +150,7 @@ def results_page():
             </div>
         """.format(ripe_pct, unripe_pct, overripe_pct), unsafe_allow_html=True)
 
-    # === Right: Pie Chart ===
+    # === Right Side: Pie Chart ===
     with col2:
         fig = go.Figure(data=[go.Pie(
             labels=['Ripe', 'Unripe', 'Overripe'],
@@ -150,7 +169,10 @@ def results_page():
         )
         st.plotly_chart(fig, use_container_width=True)
 
-    # === Exit Button Centered ===
+    # === Close Container ===
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    # === Centered Exit Button ===
     col_exit = st.columns([1, 2, 1])[1]
     with col_exit:
         if st.button("EXIT", key="exit_results", use_container_width=True):
