@@ -122,8 +122,10 @@ def results_page():
     # Title
     st.markdown("<div class='overlay'><h2>DETECTION RESULTS</h2></div>", unsafe_allow_html=True)
 
-    col1, col2 = st.columns(2)
+    # Create columns with space in between
+    col1, spacer, col2 = st.columns([1, 0.2, 1])
 
+    # Left: Text inside gray box
     with col1:
         st.markdown(f"""
             <div style="
@@ -140,6 +142,7 @@ def results_page():
             </div>
         """, unsafe_allow_html=True)
 
+    # Right: Pie chart
     with col2:
         fig = go.Figure(data=[go.Pie(
             labels=['Ripe', 'Unripe', 'Overripe'],
@@ -157,10 +160,12 @@ def results_page():
         )
         st.plotly_chart(fig, use_container_width=True)
 
+    # Exit button centered
     col_exit = st.columns([1, 2, 1])[1]
     with col_exit:
         if st.button("EXIT", key="exit_results", use_container_width=True):
             st.session_state.page = 'control'
+
 
 
 # === Page Router ===
