@@ -124,7 +124,6 @@ def results_page():
 
     col1, col2 = st.columns(2)
 
-    # Left side: All text in one single gray box
     with col1:
         st.markdown(f"""
             <div style="
@@ -134,14 +133,13 @@ def results_page():
                 color: white;
                 margin-top: 10px;
             ">
-                <h3>🍍 Maturity Breakdown</h3>
-                <p style="font-size: 18px; color: limegreen;">✅ Ripe: {ripe_pct:.1f}%</p>
-                <p style="font-size: 18px; color: orange;">🟠 Unripe: {unripe_pct:.1f}%</p>
-                <p style="font-size: 18px; color: crimson;">🔴 Overripe: {overripe_pct:.1f}%</p>
+                <h3 style="margin-bottom: 25px;">🍍 Maturity Breakdown</h3>
+                <p style="font-size: 18px; color: limegreen; margin-bottom: 18px;">✅ Ripe: {ripe_pct:.1f}%</p>
+                <p style="font-size: 18px; color: orange; margin-bottom: 18px;">🟠 Unripe: {unripe_pct:.1f}%</p>
+                <p style="font-size: 18px; color: crimson; margin-bottom: 5px;">🔴 Overripe: {overripe_pct:.1f}%</p>
             </div>
         """, unsafe_allow_html=True)
 
-    # Right side: Pie chart
     with col2:
         fig = go.Figure(data=[go.Pie(
             labels=['Ripe', 'Unripe', 'Overripe'],
@@ -159,7 +157,6 @@ def results_page():
         )
         st.plotly_chart(fig, use_container_width=True)
 
-    # Exit button centered
     col_exit = st.columns([1, 2, 1])[1]
     with col_exit:
         if st.button("EXIT", key="exit_results", use_container_width=True):
