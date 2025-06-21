@@ -118,49 +118,42 @@ def results_page():
     # Title
     st.markdown("<div class='overlay'><h2>DETECTION RESULTS</h2></div>", unsafe_allow_html=True)
 
-    # Gray box with columns inside
-    with st.container():
+    col1, col2 = st.columns([1, 1])  # Text on left, chart on right
+
+    with col1:
         st.markdown("""
-            <div style='background-color: #2e2e2e; padding: 30px; border-radius: 15px;'>
-        """, unsafe_allow_html=True)
+            <div style='background-color: #2e2e2e; padding: 20px 30px; border-radius: 12px; color: white;'>
+                <h3>🍍 Maturity Breakdown</h3>
+                <p>✅ <span style="color:limegreen;">Ripe:</span> {:.1f}%</p>
+                <p>🟠 <span style="color:orange;">Unripe:</span> {:.1f}%</p>
+                <p>🔴 <span style="color:crimson;">Overripe:</span> {:.1f}%</p>
+            </div>
+        """.format(ripe_pct, unripe_pct, overripe_pct), unsafe_allow_html=True)
 
-        col1, col2 = st.columns([1, 1])  # Equal width
+    with col2:
+        fig = go.Figure(data=[go.Pie(
+            labels=['Ripe', 'Unripe', 'Overripe'],
+            values=[ripe, unripe, overripe],
+            marker=dict(colors=['limegreen', 'orange', 'crimson']),
+            hole=0.3,
+            textinfo='label+percent'
+        )])
+        fig.update_layout(
+            showlegend=False,
+            paper_bgcolor='rgba(0,0,0,0)',
+            font=dict(color='white'),
+            margin=dict(l=0, r=0, t=0, b=0),
+            height=300,
+            width=300,
+        )
+        st.plotly_chart(fig, use_container_width=False)
 
-        with col1:
-            st.markdown(f"""
-                <div style='color: white; padding: 10px 20px;'>
-                    <h3>🍍 Maturity Breakdown</h3>
-                    <p>✅ <span style="color:limegreen;">Ripe:</span> {ripe_pct:.1f}%</p>
-                    <p>🟠 <span style="color:orange;">Unripe:</span> {unripe_pct:.1f}%</p>
-                    <p>🔴 <span style="color:crimson;">Overripe:</span> {overripe_pct:.1f}%</p>
-                </div>
-            """, unsafe_allow_html=True)
-
-        with col2:
-            fig = go.Figure(data=[go.Pie(
-                labels=['Ripe', 'Unripe', 'Overripe'],
-                values=[ripe, unripe, overripe],
-                marker=dict(colors=['limegreen', 'orange', 'crimson']),
-                hole=0.3,
-                textinfo='label+percent'
-            )])
-            fig.update_layout(
-                showlegend=False,
-                paper_bgcolor='rgba(0,0,0,0)',
-                font=dict(color='white'),
-                margin=dict(l=0, r=0, t=0, b=0),
-                height=300,
-                width=300,
-            )
-            st.plotly_chart(fig, use_container_width=False)
-
-        st.markdown("</div>", unsafe_allow_html=True)  # Close gray box
-
-    # Exit button
+    # Exit Button
     col = st.columns([1, 2, 1])[1]
     with col:
         if st.button("EXIT", key="exit_results", use_container_width=True):
             st.session_state.page = 'control'
+
 
 # === Page Router ===
 if st.session_state.page == 'home':
