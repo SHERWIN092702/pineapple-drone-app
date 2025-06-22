@@ -1,12 +1,13 @@
-# app.py
+# app.py with results pie chart using detection count file
 
 import streamlit as st
 import subprocess
 import sys
-import os
-import model11_module
 import time
+import os
 import plotly.graph_objects as go
+import json
+from pathlib import Path
 
 # === Global CSS Background + Styling ===
 st.markdown("""
@@ -33,8 +34,10 @@ st.markdown("""
 # === Page State Initialization ===
 if 'page' not in st.session_state:
     st.session_state.page = 'home'
-if 'running' not in st.session_state:
-    st.session_state.running = False
+if 'uxplay_proc' not in st.session_state:
+    st.session_state.uxplay_proc = None
+if 'detection_proc' not in st.session_state:
+    st.session_state.detection_proc = None
 
 # === Home Page ===
 def home_page():
@@ -69,42 +72,82 @@ def control_panel():
 
     col3, col4 = st.columns(2)
     with col3:
-        if not st.session_state.running and st.button("📷 START DETECTION", key="start", use_container_width=True):
-            # Start uxplay if needed
-            subprocess.Popen(["uxplay"])
-            st.session_state.running = True
+        if st.button("📷 START DETECTION", key="start", use_container_width=True):
+            try:
+                uxplay_path = "/usr/local/bin/uxplay"
+                detection_script = "/home/rpi5/Desktop/yolo_object/model11.py"
+
+                subprocess.run(["pkill", "uxplay"])
+                uxplay_proc = subprocess.Popen([uxplay_path])
+                st.session_state.uxplay_proc = uxplay_proc
+
+                detection_proc = subprocess.Popen([sys.executable, detection_script])
+                st.session_state.detection_proc = detection_proc
+
+                st.success("✅ UXPlay and detection started!")
+
+            except Exception as e:
+                st.error(f"❌ Failed to start: {e}")
+
+        if st.button("⬅️ EXIT", key="exit", use_container_width=True):
+            try:
+                if st.session_state.detection_proc:
+                    st.session_state.detection_proc.terminate()
+                    st.session_state.detection_proc = None
+                if st.session_state.uxplay_proc:
+                    st.session_state.uxplay_proc.terminate()
+                    st.session_state.uxplay_proc = None
+                subprocess.run(["pkill", "uxplay"])
+            except Exception as e:
+                st.error(f"⚠️ Failed to stop: {e}")
+            st.session_state.page = 'home'
 
     with col4:
-        if st.session_state.running and st.button("🔴 STOP", key="stop", use_container_width=True):
-            st.session_state.running = False
-            # Stop uxplay if desired (not guaranteed, requires pkill or user control)
+        if st.button("🔴 STOP", key="stop", use_container_width=True):
+            try:
+                if st.session_state.detection_proc:
+                    st.session_state.detection_proc.terminate()
+                    st.session_state.detection_proc = None
+                if st.session_state.uxplay_proc:
+                    st.session_state.uxplay_proc.terminate()
+                    st.session_state.uxplay_proc = None
+                subprocess.run(["pkill", "uxplay"])
+                st.success("🛑 UXPlay and detection stopped.")
+            except Exception as e:
+                st.error(f"⚠️ Failed to stop: {e}")
 
-    frame_spot = st.empty()
-    if st.session_state.running:
-        for frame in model11_module.run_detection_yield_frames():
-            frame_spot.image(frame, channels="RGB")
-            if not st.session_state.running:
-                break
-            time.sleep(0.05)
-
-    col_exit, col_results = st.columns(2)
-    with col_exit:
-        if st.button("⬅️ EXIT", key="exit", use_container_width=True):
-            st.session_state.page = 'home'
-    with col_results:
         if st.button("📊 RESULTS", key="results", use_container_width=True):
+            try:
+                if st.session_state.detection_proc:
+                    st.session_state.detection_proc.terminate()
+                    st.session_state.detection_proc = None
+                if st.session_state.uxplay_proc:
+                    st.session_state.uxplay_proc.terminate()
+                    st.session_state.uxplay_proc = None
+                subprocess.run(["pkill", "uxplay"])
+            except Exception as e:
+                st.error(f"⚠️ Failed to stop: {e}")
             st.session_state.page = 'results'
 
 # === Results Page ===
 def results_page():
-    # Example dummy results — replace with actual counts if needed
-    ripe, unripe, overripe = 12, 8, 5
+    st.markdown("<div class='overlay'><h2>DETECTION RESULTS</h2></div>", unsafe_allow_html=True)
+
+    # Read detection count from file
+    counts_file = Path("/home/rpi5/Desktop/yolo_object/detection_counts.json")
+    counts = {"ripe": 0, "unripe": 0, "overripe": 0}
+    if counts_file.exists():
+        with open(counts_file) as f:
+            counts = json.load(f)
+
+    ripe = counts["ripe"]
+    unripe = counts["unripe"]
+    overripe = counts["overripe"]
     total = ripe + unripe + overripe
+
     ripe_pct = (ripe / total) * 100 if total else 0
     unripe_pct = (unripe / total) * 100 if total else 0
     overripe_pct = (overripe / total) * 100 if total else 0
-
-    st.markdown("<div class='overlay'><h2>DETECTION RESULTS</h2></div>", unsafe_allow_html=True)
 
     gap_ratio = 0.3
     col1, col_gap, col2 = st.columns([1, gap_ratio, 1])
@@ -113,9 +156,9 @@ def results_page():
         st.markdown(f"""
             <div style='background-color: #2e2e2e; padding: 20px 30px; border-radius: 12px; color: white;'>
                 <h3>🍍 Maturity Breakdown</h3>
-                <p><span style="color:limegreen;">🟢 Ripe:</span> {ripe_pct:.1f}%</p>
-                <p><span style="color:orange;">🟠 Unripe:</span> {unripe_pct:.1f}%</p>
-                <p><span style="color:crimson;">🔴 Overripe:</span> {overripe_pct:.1f}%</p>
+                <p><span style=\"color:limegreen;\">🟢 Ripe:</span> {ripe_pct:.1f}%</p>
+                <p><span style=\"color:orange;\">🟠 Unripe:</span> {unripe_pct:.1f}%</p>
+                <p><span style=\"color:crimson;\">🔴 Overripe:</span> {overripe_pct:.1f}%</p>
             </div>
         """, unsafe_allow_html=True)
 
@@ -140,6 +183,16 @@ def results_page():
     col = st.columns([1, 2, 1])[1]
     with col:
         if st.button("⬅️ BACK TO CONTROL", key="exit_results", use_container_width=True):
+            try:
+                if st.session_state.detection_proc:
+                    st.session_state.detection_proc.terminate()
+                    st.session_state.detection_proc = None
+                if st.session_state.uxplay_proc:
+                    st.session_state.uxplay_proc.terminate()
+                    st.session_state.uxplay_proc = None
+                subprocess.run(["pkill", "uxplay"])
+            except Exception as e:
+                st.error(f"⚠️ Failed to stop: {e}")
             st.session_state.page = 'control'
 
 # === Page Router ===
