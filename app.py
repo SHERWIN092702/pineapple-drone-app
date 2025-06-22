@@ -145,9 +145,13 @@ def results_page():
     overripe = counts["overripe"]
     total = ripe + unripe + overripe
 
-    ripe_pct = (ripe / total) * 100 if total else 0
-    unripe_pct = (unripe / total) * 100 if total else 0
-    overripe_pct = (overripe / total) * 100 if total else 0
+    if total == 0:
+        st.warning("No detection data found yet. Run the detection first to see results.")
+        return
+
+    ripe_pct = (ripe / total) * 100
+    unripe_pct = (unripe / total) * 100
+    overripe_pct = (overripe / total) * 100
 
     gap_ratio = 0.3
     col1, col_gap, col2 = st.columns([1, gap_ratio, 1])
@@ -194,6 +198,7 @@ def results_page():
             except Exception as e:
                 st.error(f"⚠️ Failed to stop: {e}")
             st.session_state.page = 'control'
+
 
 # === Page Router ===
 if st.session_state.page == 'home':
