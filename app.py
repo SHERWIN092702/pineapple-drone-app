@@ -38,6 +38,10 @@ if 'uxplay_proc' not in st.session_state:
     st.session_state.uxplay_proc = None
 if 'detection_proc' not in st.session_state:
     st.session_state.detection_proc = None
+if 'stream_mode' not in st.session_state:
+    st.session_state.stream_mode = 'UXPlay'
+if 'rtmp_url' not in st.session_state:
+    st.session_state.rtmp_url = ''
 
 # === Home Page ===
 def home_page():
@@ -70,21 +74,31 @@ def control_panel():
     st.markdown("<div class='overlay'><h2>CONTROL PANEL</h2></div>", unsafe_allow_html=True)
     st.markdown("<br><br>", unsafe_allow_html=True)
 
+    # Stream source selector
+    st.session_state.stream_mode = st.selectbox("Select Video Source:", ["UXPlay", "RTMP Stream"], index=0)
+
+    if st.session_state.stream_mode == "RTMP Stream":
+        st.session_state.rtmp_url = st.text_input("Enter RTMP Stream URL (e.g. from DJI Fly):", value=st.session_state.rtmp_url)
+
     col3, col4 = st.columns(2)
     with col3:
         if st.button("📷 START DETECTION", key="start", use_container_width=True):
             try:
-                uxplay_path = "/usr/local/bin/uxplay"
                 detection_script = "/home/rpi5/Desktop/yolo_object/model11.py"
 
                 subprocess.run(["pkill", "uxplay"])
-                uxplay_proc = subprocess.Popen([uxplay_path])
-                st.session_state.uxplay_proc = uxplay_proc
 
+                # Only launch UXPlay if selected
+                if st.session_state.stream_mode == "UXPlay":
+                    uxplay_path = "/usr/local/bin/uxplay"
+                    uxplay_proc = subprocess.Popen([uxplay_path])
+                    st.session_state.uxplay_proc = uxplay_proc
+
+                # Launch detection
                 detection_proc = subprocess.Popen([sys.executable, detection_script])
                 st.session_state.detection_proc = detection_proc
 
-                st.success("✅ UXPlay and detection started!")
+                st.success("✅ Detection started!" + (" Using UXPlay." if st.session_state.stream_mode == "UXPlay" else " Using RTMP Stream."))
 
             except Exception as e:
                 st.error(f"❌ Failed to start: {e}")
@@ -112,7 +126,7 @@ def control_panel():
                     st.session_state.uxplay_proc.terminate()
                     st.session_state.uxplay_proc = None
                 subprocess.run(["pkill", "uxplay"])
-                st.success("🛑 UXPlay and detection stopped.")
+                st.success("🛑 Detection stopped.")
             except Exception as e:
                 st.error(f"⚠️ Failed to stop: {e}")
 
@@ -133,7 +147,6 @@ def control_panel():
 def results_page():
     st.markdown("<div class='overlay'><h2>DETECTION RESULTS</h2></div>", unsafe_allow_html=True)
 
-    # Read detection count from file
     counts_file = Path("/home/rpi5/Desktop/yolo_object/detection_counts.json")
     counts = {"ripe": 0, "unripe": 0, "overripe": 0}
     if counts_file.exists():
@@ -198,7 +211,6 @@ def results_page():
             except Exception as e:
                 st.error(f"⚠️ Failed to stop: {e}")
             st.session_state.page = 'control'
-
 
 # === Page Router ===
 if st.session_state.page == 'home':
