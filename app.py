@@ -72,9 +72,8 @@ def control_panel():
     st.markdown("<div class='overlay'><h2>CONTROL PANEL</h2></div>", unsafe_allow_html=True)
     st.markdown("<br><br>", unsafe_allow_html=True)
 
-    # Only accept RTMP or YouTube
+    # Source selector (only RTMP/YouTube allowed)
     st.session_state.stream_mode = st.selectbox("Select Video Source:", ["RTMP Stream", "YouTube Stream"])
-
     st.session_state.rtmp_url = st.text_input("📺 Paste RTMP or YouTube Stream URL here:", value=st.session_state.rtmp_url)
 
     col3, col4 = st.columns(2)
@@ -82,15 +81,19 @@ def control_panel():
         if st.button("📷 START DETECTION", key="start", use_container_width=True):
             try:
                 stream_url = st.session_state.rtmp_url.strip()
-
                 if not (stream_url.startswith("rtmp://") or "youtube.com" in stream_url or "youtu.be" in stream_url):
                     st.error("❌ Please enter a valid RTMP or YouTube URL.")
                     return
 
                 detection_script = "C:\\DAR\\model11.py"
-                args = ["--source", "rtmp", "--url", stream_url]
+                detection_args = [
+                    sys.executable,
+                    detection_script,
+                    "--source", "rtmp",
+                    "--url", stream_url
+                ]
 
-                detection_proc = subprocess.Popen([sys.executable, detection_script] + args)
+                detection_proc = subprocess.Popen(detection_args)
                 st.session_state.detection_proc = detection_proc
 
                 st.success("✅ Detection started with stream: " + stream_url)
